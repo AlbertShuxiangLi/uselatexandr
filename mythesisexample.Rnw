@@ -1,0 +1,195 @@
+%Tested Positive | Windows7Ultimate-R3.2.1-RStudio0.99-MikText2.9-RTools3.3
+
+\documentclass[letterpaper, 0pt]{article}
+%\usepackage[margin=1.5in]{geometry}
+\usepackage{layout}
+\setlength{\footskip}{40pt}
+
+\setlength{\textheight}{8.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\voffset}{1pt}
+\setlength{\hoffset}{1pt}
+\setlength{\oddsidemargin}{1pt}
+\setlength{\topmargin}{1pt}
+\setlength{\marginparwidth}{55pt}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\title{How to Use LaTex and R to Write a Paper}
+\date{29 July 2015}
+\author{Professional O. Writer}
+\SweaveOpts{echo=true}
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\chead{This is a head text}
+
+\begin{document}
+\layout
+\SweaveOpts{concordance=TRUE}
+
+\pagenumbering{gobble}
+\maketitle
+
+\newpage
+\pagenumbering{arabic}
+
+\section{Figures}
+
+
+We setup variable definitions without actually evaluating them, then we put the pieces together, 
+result shown in Figure~\ref{fig:reg}
+
+<<xydef,eval=false>>=
+x <- 1:100
+y <- 3 + 0.25*x^2 + 1.5*rnorm(x, 2, 15)
+@
+
+\begin{figure}[h!]
+\label{fig:reg}
+<<fig=TRUE,echo=FALSE>>=
+<<xydef>>
+par(mfrow=c(2,2))
+lm1 <- lm(y~x)
+plot(lm1)
+@
+\caption{First Regression Plots}
+\end{figure}
+\begin{center}
+\end{center}
+
+\newpage 
+
+Here is the regression result.
+<<fig=FALSE,echo=FALSE, results=verbatim>>=
+summary(lm1)
+@
+
+\newpage
+\section{More Figures}
+This is section "More Figures", shown in Figure~\ref{fig:xyplot}. 
+
+\begin{center}
+\begin{figure}[h!]
+\label{fig:xyplot}
+<<fig=TRUE,echo=TRUE>>=
+par(mfrow=c(1,1))
+x <- 1:100
+y <- 3 + 0.25*x^2 + 1.5*rnorm(x, 2, 15)
+plot(x, y, main = "Linear Regression Line Plot")
+abline(lm(y~x))
+@
+\caption{(y~x) Plot}
+\end{figure}
+\end{center}
+
+
+\subsection{Part MF1}
+
+This formula $f(x) = x^2$ is an example. $\frac{1}{\sqrt{x}}$. $\left(\frac{1}{\sqrt{x}}\right)$
+
+$\alpha and A$, $\gamma and \Gamma$,$\delta and \Delta$ $\theta and \Theta$ $\Lambda and \lambda$
+
+$\forall x \in X, \quad \exists y \leq \epsilon$
+
+$\displaystyle\sum_{i=1}^{10} \sum_{j=1}^{i} t_(i,j)$
+
+$\sqrt[a]{(b^x+4dc)}$, $\sqrt[n]{1+x+x^2+x^3+\ldots}$
+
+
+\begin{align*}
+  1 + 2 &= 3\\
+  1 &= 3 - 2
+\end{align*}
+\begin{align*}
+  f(x) &= x^2\\
+  g(x) &= \frac{1}{x}\\
+  F(x) &= \int^a_b \frac{y^(.0073z)}{x}x^3
+\end{align*}
+
+\subsection{Part MF2}
+\subsubsection{part mf2-1}
+
+\begin{center}$\left[
+\begin{matrix}
+2 & 0 & 1\\
+4 & 1 & 2\\
+6 & 2 & 3
+\end{matrix}
+\right]$\end{center}
+
+\subsection{Subsection MF3}
+
+
+\section{Text}
+This is section "Text".
+
+\subsection{Part T1 - Equations}
+We have write an equation her as Equation \ref{eq:Schroedinger} and others, such as Equation \ref{eq:Thesis1}, Equation \ref{eq:Thesis2}, Equation \ref{eq:Thesis3} and Equation \ref{eq:Thesis4}.
+
+\begin{equation*}
+f(x) = x^2
+\end{equation*}
+
+\begin{equation}
+\label{eq:Schroedinger}
+\frac{\hbar^{2}}{2m}\nabla^{2}\psi+V\psi=E\psi.
+\end{equation}
+
+\begin{equation}
+\label{eq:Thesis1}
+VG(t) = F(T2C(t), NG(t), IGV(t))
+\end{equation}
+
+\begin{equation}
+\label{eq:Thesis2}
+X_t = VG(t)
+\end{equation}
+
+\begin{equation}
+\label{eq:Thesis3}
+X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + /dots + AR_pX_{t-p} + A_t
+        - MA_1A_{t-1} - MA_2A_{t-2} - \dots - MA_qA_{t-q}
+\end{equation}
+
+\begin{equation}
+\label{eq:Thesis4}
+p(CompressorStall|N_{CombinedFlights} = \beta_0 
++ \displaystyle\sum_{p}^{i=1}\beta_i*AR_i
++ \displaystyle\sum_{q}^{j=1}\beta_{j+p}*MA_j + \epsilon)
+\end{equation}
+
+
+\subsection{Part T2}
+\paragraph{Paragraph}
+\subparagraph{Subparagraph}
+\subsection{Illustration of ARIMA-LRM Method in My Thesis}
+Here is to illustrate how my ARIMA-LRM method calculate the LRM coefficients (of Equation \ref{eq:Thesis4}) handle the ARIMA coefficients (from Equation\ref{eq:Thesis3}):
+
+\begin{center}
+
+$\left(
+\begin{matrix}
+y_1\\
+y_2\\
+\dots \\
+y_m\\
+y_{m+1}\\
+\dots\\
+y_n
+\end{matrix}
+\right)$ $\sim$ $\left(
+\begin{matrix}
+AR_{1_1} & AR_{2_1} & \dots & AR_{p_1} & MA_{1_1} & MA_{2_1} & \dots & MA_{q_1}\\
+AR_{1_2} & AR_{2_2} & \dots & AR_{p_2} & MA_{1_2} & MA_{2_2} & \dots & MA_{q_2}\\
+\dots    & \dots    & \dots & \dots    & \dots    & \dots    & \dots & \dots\\
+AR_{1_n} & AR_{2_n} & \dots & AR_{p_n} & MA_{1_n} & MA_{2_n} & \dots & MA_{q_n}
+\end{matrix}
+\right)$
+
+\end{center}
+
+\end{document}
