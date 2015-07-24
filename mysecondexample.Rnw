@@ -1,4 +1,6 @@
+%% Example to Use LaTex + R with Thesis Equations
 %Tested Positive | Windows7Home-R3.2.1-RStudio0.99-MikText2.9-RTools3.3
+%Tested Positive | Ubuntu15.04-R3.1.2-2-RStudio0.99.467-Texlive2014.20141024-2ubuntu1
 
 \documentclass[letterpaper, 0pt]{article}
 %\usepackage[margin=1.5in]{geometry}
