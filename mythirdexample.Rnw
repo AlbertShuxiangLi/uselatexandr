@@ -154,7 +154,7 @@ $\left[
 \end{center}
 
 \subsection{Subsection MF3}
-
+\newpage
 \section{Text}
 This is section "Text". Random citation \autocite[47]{DUMMY:1} embeddeed in text. Random citation \autocite[47]{DUMMY:3} embeddeed in text. Random citation \autocite[47]{DUMMY:4} embeddeed in text.
 \subsection{Part T1 - Equations}
@@ -165,6 +165,8 @@ We have write an equation her as Equation \ref{eq:Schroedinger} and others, such
 \frac{\hbar^{2}}{2m}\nabla^{2}\psi+V\psi=E\psi.
 \end{equation}
 
+\subsubsection{Equations Used In My Thesis}
+Some examples from thesis which published before 18 June 2015. \\
 \begin{equation}
 \label{eq:Thesis1}
 VG(t) = f(T2C(t), NG(t), IGV(t))
@@ -175,12 +177,14 @@ VG(t) = f(T2C(t), NG(t), IGV(t))
 X_t = VG(t)
 \end{equation}
 
+\textbf{\textit{The Jinkins-Box method applied to utilize builtin arima functions to get the characteristics of the time series. Those AR and MA coefficients are described as:}}
 \begin{equation}
 \label{eq:Thesis3}
-X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + /dots + AR_pX_{t-p} + A_t
+X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + \dots + AR_pX_{t-p} + A_t
         - MA_1A_{t-1} - MA_2A_{t-2} - \dots - MA_qA_{t-q}
 \end{equation}
 
+\textbf{\textit{Currently the LRM applied to predict, but SVM (Support Vector Machine) method will be applied in the near future. I hope.}}
 \begin{equation}
 \label{eq:Thesis4}
 p(CompressorStall|N_{CombinedFlights}) = \beta_0 
@@ -197,7 +201,7 @@ then \begin{equation*} x=\frac{-b\pm\sqrt[2]{b^2-4ac}}{2a} \end{equation*}
            t-s\cos\omega t\right)}{s^2+\omega^2}\right|_0^\infty
         = \frac{s}{s^2+\omega^2}
 \end{equation*}
-
+\newpage
 \subsection{Part T2}
 \paragraph{Paragraph2}
 Random citation \autocite[17]{DUMMY:1} embeddeed in text.
