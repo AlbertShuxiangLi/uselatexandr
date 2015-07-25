@@ -1,12 +1,13 @@
 ---
-title: "Use LaTex and R to Write a Paper (Step-by-step Instruction, Utilizing Ubuntu and github)"
+title: "Use LaTex and R to Write a Paper"
 author: "Albert Shuxiang Li"
 date: "25 July 2015"
-output:
+output
   html_document:
         keep_md: yes
 ---
-## For Linux users
+### Step-by-step Instruction, Utilizing Ubuntu and github
+### For Linux users (for example, Ubuntu 15.04)
 - Install livetex from Ubuntu Software Center by search “texlive”. Otherwise, in the terminal
       - sudo apt-get install texlive
 - Install git from Ubuntu Software Center by search “r-base”. Otherwise, in the terminal
@@ -14,6 +15,7 @@ output:
       - sudo apt-get install r-base
       - sudo apt-get install r-base-dev
 - Install R Studio from Ubuntu Software Center by search “rstudio”. Otherwise, in the terminal
+      - sudo apt-get update
       - sudo apt-get install rstudio
 - Open github.com, register an acount. You will get
       - user.name (user_name)
