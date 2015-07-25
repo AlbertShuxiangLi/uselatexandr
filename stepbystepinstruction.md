@@ -28,9 +28,9 @@ output
       - cd  RepositoryName
 - For example, use Ubuntu Files application to copy README.md, file1.Rnw, file1.pdf and bib1.bib to the folder you just created (/home/RepositoryName)
 - First time to use git on Ubuntu, You need run following commands in terminal 
-      - (optional) cd RepositoryName
-      - git config --global user.email user_email
-      - git config --global user.name user_name
+      - cd RepositoryName (optional, if you are not here yet)
+      - git config --global user.email "user_email"
+      - git config --global user.name "user_name"
       - git init
       - git remote add https://github.com/user_name/RepositoryName.git
       - git add *
@@ -42,9 +42,9 @@ output
 - In another Linus computer, you would run following commands with terminal to pull all contents from github repository which you just newly created and uploaded with four (4) files.
       - mkdir RepositoryName 
       - cd  RepositoryName
-      - git config --global user.email user_email
-      - git config --global user.name user_name
+      - git config --global user.email "user_email"
+      - git config --global user.name "user_name"
       - git init
       - git remote add https://github.com/user_name/RepositoryName.git
       - git pull origin master
-      - See right now there is four (4) files on your local.
+      - See right now there are four (4) files on your local.
