@@ -1,5 +1,5 @@
 # Writing A Paper Using LaTex and R
-- Working example given please see "mysecondexample.Rnw"
+- Working example given please see "mysthirdexample.Rnw" along with bibexample.bib
 
 ## Tested with positive result on following platform
 - Windows 7 (Home or Ultimate)
