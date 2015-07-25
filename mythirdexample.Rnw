@@ -184,8 +184,8 @@ X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + /dots + AR_pX_{t-p} + A_t
 \begin{equation}
 \label{eq:Thesis4}
 p(CompressorStall|N_{CombinedFlights}) = \beta_0 
-+ \displaystyle\sum_{p}^{i=1}\beta_i*AR_i
-+ \displaystyle\sum_{q}^{j=1}\beta_{j+p}*MA_j + \epsilon)
++ \displaystyle\sum_{i=1}^{p}\beta_i*AR_i
++ \displaystyle\sum_{j=1}^{q}\beta_{j+p}*MA_j + \epsilon)
 \end{equation}
 \subsubsection{A Familar Equation}
 if \begin{equation*} ax^2+bx+c=0 \end{equation*}
