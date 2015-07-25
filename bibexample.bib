@@ -1,7 +1,9 @@
+%% Example of @book @article @conference citations
 %%% CONTENT of "bibexample.bib" %%%
+
 @book{DUMMY:1,
 AUTHOR          = "John Doe",
-TITLE           = "The Book without Title One",
+TITLE           = "The Book ithout Title One",
 PUBLISHER       = "Dummy Publisher First",
 YEAR            = "2100",
 }
@@ -31,18 +33,44 @@ YEAR            = "2200",
     pages   = "342--351"
 }
 
-@conference{DUMMY:5,
-    author    = "",
+@article{DUMMY:5,
+    author  = "Clara M. Li",
+    title   = "The {C}omprehensive {A}nimation {A}nalysis {G}uide ({CLARA})",
+    year    = "2019",
+    journal = "DreamWorks",
+    volume  = "14",
+    number  = "3",
+    pages   = "123--456"
+}
+
+@conference{DUMMY:6,
+    author    = "Margaret M. Seely",
     title     = "They All Went To Islands",
     booktitle = "Optic Fiber Communications",
     editor   = "Hood Peter",
-    %volume   = "",
-    %number   = "",
-    %series   = "",
+    volume   = "27",
+    %number   = "17",
+    series   = "How It Works",
     pages    = "78 - 82",
     %address  = "",
     year      = "2014",
-    month    = "July",
+    month    = "07",
     %publisher= "",
-    note     = "Without Nothing",
+    note     = "Nothing Impossible Right",
+}
+
+@conference{DUMMY:7,
+    author    = "Noah C. Li",
+    title     = "They All Play Minecraft",
+    booktitle = "Gaming Industry Analysis",
+    editor   = "Clara Li",
+    volume   = "17",
+    number   = "07",
+    series   = "How It Works",
+    pages    = "78 - 82",
+    address  = "12345 Buiding Road, Cedar Hills, Utah 84056",
+    year      = "2014",
+    month    = "07",
+    publisher= "Electronics House",
+    note     = "Nothing Impossible",
 }
