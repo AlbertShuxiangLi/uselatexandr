@@ -6,8 +6,8 @@ output
   html_document:
         keep_md: yes
 ---
-### Step-by-step Instruction, Utilizing Ubuntu and github
-### For Linux users (for example, Ubuntu 15.04)
+#### Step-by-step Instruction, Utilizing Ubuntu and github
+#### For Linux users (for example, Ubuntu 15.04)
 - Install livetex from Ubuntu Software Center by search “texlive”. Otherwise, in the terminal
       - sudo apt-get install texlive
 - Install git from Ubuntu Software Center by search “r-base”. Otherwise, in the terminal
