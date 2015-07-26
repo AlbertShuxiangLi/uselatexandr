@@ -35,7 +35,7 @@ output
       - git remote add https://github.com/user_name/RepositoryName.git
       - git add *
       - git commit -m “your first commit message here”
-      - git pull -u origin master
+      - git push -u origin master
 - Right now, you can open github.com to check your repository content at
       - https://github.com/user_name/RepositoryName
       - You are seeing four (4) files (README.md, file1.Rnw, file1.pdf and bib1.bib)  
