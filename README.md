@@ -1,5 +1,6 @@
 # Writing A Paper Using LaTex and R
-- Working example given please see "my...example.Rnw" along with bibexample.bib
+- Step-by-step intruction written for beginners 
+- Several working example given as "my...example.Rnw" along with bibexample.bib
 
 ## Tested with positive result on following platform
 - Windows 7 (Home or Ultimate)
