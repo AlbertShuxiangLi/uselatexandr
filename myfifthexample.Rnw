@@ -1,5 +1,4 @@
 \documentclass[letterpaper, 0pt]{article}
-%\usepackage[margin=1.5in]{geometry}
 %\usepackage{layout}
 \setlength{\footskip}{40pt}
 
@@ -21,6 +20,7 @@
 \usepackage[siunitx]{circuitikz}
 \usepackage[backend=bibtex, style=numeric]{biblatex}
 \addbibresource{bibexample.bib}
+\usepackage{graphicx}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -195,9 +195,19 @@ $\left[
 \end{center}
 
 \subsection{Subsection MF3}
+\begin{figure}[h!]
+\label{fig:radar}
+\begin{center}
+\setkeys{Gin}{width=0.45\textwidth}
+\includegraphics{test.jpg}
+\caption{Example of \LaTeX \hspace{1pt} picture}
+\end{center}
+\end{figure}
+
+
 \newpage
 \section{Text}
-This is section "Text". Random Ref. \cite[47]{DUMMY:1} embeddeed in text. Random Ref. \cite[47]{DUMMY:3} embeddeed in text. Random Ref. \cite[47]{DUMMY:4} embeddeed in text.
+This is section "Text". Random Ref. \cite{DUMMY:1} embeddeed in text. Random Ref. \cite[47]{DUMMY:3} embeddeed in text. Random Ref. \cite{DUMMY:4} embeddeed in text.
 \subsection{Part T1 - Equations}
 We have write an equation her as Equation \ref{eq:Schroedinger} and others, such as Equation \ref{eq:Thesis1}, Equation \ref{eq:Thesis2}, Equation \ref{eq:Thesis3} and Equation \ref{eq:Thesis4}.
 
@@ -270,7 +280,16 @@ AR_{1_1} & AR_{2_1} & \dots & AR_{p_1} & MA_{1_1} & MA_{2_1} & \dots & MA_{q_1}\
 AR_{1_2} & AR_{2_2} & \dots & AR_{p_2} & MA_{1_2} & MA_{2_2} & \dots & MA_{q_2}\\
 \vdots    & \vdots    & \ddots & \vdots    & \vdots    & \vdots    & \ddots & \vdots\\
 AR_{1_n} & AR_{2_n} & \dots & AR_{p_n} & MA_{1_n} & MA_{2_n} & \dots & MA_{q_n}
-\end{matrix}\right)$
+\end{matrix}\right)$\\
+
+\begin{figure}[h!]
+\label{fig:anotherpic}
+\begin{center}
+\setkeys{Gin}{width=0.55\textwidth}
+\includegraphics[angle=15]{test2.jpg}
+\caption{Another \LaTeX \hspace{1pt} example of picture}
+\end{center}
+\end{figure}
 
 \end{center}
 
