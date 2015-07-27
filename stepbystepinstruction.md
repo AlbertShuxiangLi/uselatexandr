@@ -10,6 +10,8 @@ output
 #### For Linux users (for example, Ubuntu 15.04)
 - Install texlive from Ubuntu Software Center by search “texlive”. Otherwise, in the terminal
       - sudo apt-get install texlive
+      - sudo apt-get install biber (optional)
+      - sudo apt-get install babel (optional)
 - Install git from Ubuntu Software Center by search “r-base”. Otherwise, in the terminal
       - sudo apt-get update
       - sudo apt-get install r-base
