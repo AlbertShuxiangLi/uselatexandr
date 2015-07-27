@@ -24,12 +24,12 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\title{How to Use LaTex and R to Write a Paper}
+\title{How to Use \LaTeX \hspace{1pt}and r\textsuperscript{\tiny\textregistered} \hspace{1pt}to Write a Paper}
 \date{\today}
 \author{Professional O. Writer}
 \SweaveOpts{echo=true}
 \rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
-\chead{Nothing Possible If You Never Try!}
+\chead{Nothing Possible If You Never Try\hspace{5pt}\LaTeX}
 
 \begin{document}
 %\layout
