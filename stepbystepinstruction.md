@@ -12,6 +12,7 @@ output
       - sudo apt-get install texlive
       - sudo apt-get install biber (optional)
       - sudo apt-get install babel (optional)
+      - sudo apt-get install texworks (recommended)
 - Install git from Ubuntu Software Center by search “r-base”. Otherwise, in the terminal
       - sudo apt-get update
       - sudo apt-get install r-base
