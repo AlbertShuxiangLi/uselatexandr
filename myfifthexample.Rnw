@@ -80,12 +80,12 @@ label="tab:coef")
 If there is a very simple circuit, use package "circuitikz". Random Ref. \cite[121]{DUMMY:5} embeddeed in text. Random Ref. \cite[47]{DUMMY:6} embeddeed in text. Random Ref. \cite[47]{DUMMY:7} embeddeed in text. Random Ref. \cite[47]{DUMMY:7} embeddeed in text. Random Ref. \cite[47]{DUMMY:7} embeddeed in text. This example make use of the circuitikz and siunitx packages for drawing a 18W MOSFET  Amplifier for one-channel. 
 Source: http://www.circuitstoday.com/mosfet-amplifier-circuits.\\
 
-\begin{center}
-\begin{tikzpicture}[scale=1.5]
+\begin{center}\setkeys{Gin}{width=0.55\textwidth}
+\begin{tikzpicture}[scale=2]
   \draw[color=black, thick]
     (0,0) to [short,o-] (6,0){} % Baseline for connection to ground
     % Input and ground
-    (0,1) node[]{\textbf{INPUT}}
+    (0,1) node[]{\textit{INPUT}}
     % Connection of passive components
     (5,0) node[ground]{} node[circ](4.5,0){}
     (0,2) to [pC, l=$C_1$, o-] (0.5,2)
@@ -117,7 +117,7 @@ Source: http://www.circuitstoday.com/mosfet-amplifier-circuits.\\
     (6,3) to [pC, l=$C_5$,-*](5,3)
     (6,3) to [short,-o] (6,2){}
     (mos1.S)--(mos2.D)
-    (6,0) to [short,-o] (6,1){} node[above=7mm]{\textbf{SPEAKER}}
+    (6,0) to [short,-o] (6,1){} node[above=7mm]{\textit{SPEAKER}}
     ;
 \end{tikzpicture}
 \end{center}
@@ -260,7 +260,7 @@ Random Ref. \cite{DUMMY:1}, Ref. \cite[27]{DUMMY:2}, Ref. \cite{DUMMY:3}, Ref. \
 Random Ref. \cite[17]{DUMMY:7}, Ref. \cite{DUMMY:6}, Ref. \cite[27]{DUMMY:5}, Ref. \cite{DUMMY:4}, Ref. \cite[27]{DUMMY:3}, Ref. \cite{DUMMY:2} and Ref. \cite[27]{DUMMY:1} embeddeed in text.
 
 \subsection{Illustration of ARIMA-LRM Method in My Thesis}
-Here is to illustrate how my ARIMA-LRM method compute the LRM coefficients (of Equation \ref{eq:Thesis4}) from the ARIMA coefficients which are denoted as of Equation\ref{eq:Thesis3}):
+Here is to illustrate how my ARIMA-LRM method compute the LRM coefficients (of Equation \ref{eq:Thesis4}) from the ARIMA coefficients which are denoted as of Equation \ref{eq:Thesis3}):
 
 \begin{center}
 
