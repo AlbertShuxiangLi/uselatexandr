@@ -24,7 +24,8 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\title{How to Use \LaTeX \hspace{1pt}and r\textsuperscript{\tiny\textregistered} \hspace{1pt}to Write a Paper}
+\title{How to Use \LaTeX\hspace{5pt}and r\textsuperscript{\tiny\textregistered}\hspace{5pt}to 
+Write a Paper}
 \date{\today}
 \author{Professional O. Writer}
 \SweaveOpts{echo=true}
