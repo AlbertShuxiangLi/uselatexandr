@@ -1,0 +1,375 @@
+\documentclass[letterpaper, 0pt]{article}
+\setlength{\footskip}{40pt}
+
+\setlength{\textheight}{8.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\voffset}{1pt}
+\setlength{\hoffset}{1pt}
+\setlength{\oddsidemargin}{1pt}
+\setlength{\topmargin}{1pt}
+\setlength{\marginparwidth}{55pt}
+
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\addbibresource{simpthesis.bib}
+\usepackage{graphicx}
+\usepackage{gensymb}
+
+\pagestyle{fancy}
+\fancyhf{}
+\title{A METHOD TO PREDICT COMPRESSOR STALL IN THE TF34-100 TURBOFAN ENGINE UTILIZING REAL-TIME PERFORMANCE DATA}
+\date{18 June 2015}
+\author{Mr. Shuxiang Albert Li, BS \\ Civilian, USAF\\ Mr. G Travor Gones, BS \\ Civilian, USAF}
+\SweaveOpts{echo=true}
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\chead{\LaTeX\hspace{5pt}A Method to Predict Compressor Stall in the Turbofan Engine TF34-100 \\ Utilizing Real-Time Performance Data, AFIT-ENV-MS-15-J-036}
+
+\linespread{1.6}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\pagenumbering{gobble}
+\maketitle
+
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+Two types of compressor stall are observed in practice where each type is characterized by a distinct set of sensor conditions. See Table [\ref{tab:stalltype}].
+\begin{table}[!h]
+  \begin{center}
+    \begin{tabular}{l||c|r}
+       & WESA & AoA in Envelope\\
+      \hline
+      PLA & >= 12\degree & >= 12\degree\\
+      \hline
+      PS3(\% drop over 500ms) & >25 \% & >50\%\\
+      \hline
+      NF & 7\% & \\
+      \hline
+      AoA & in envelope for mach number & in envelope for mach number\\
+    \end{tabular}
+    \caption{Type of compressor stalls}
+    \label{tab:stalltype}
+  \end{center}
+\end{table}
+
+\newpage
+These results yielded the Equation \ref{eq:Thesis3}:\\
+\begin{equation}
+\label{eq:Thesis3}
+X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + \dots + AR_pX_{t-p} + A_t
+        - MA_1A_{t-1} - MA_2A_{t-2} - \dots - MA_qA_{t-q}
+\end{equation}
+Where $X_t = X(t) = VG(t)$ is the VG value at the time, $AR_i$ is the AutoRegression (AR) coefficient, and $MA_j$ is the Moving Average (MA) coefficient. This model is denoted as arima(p,0,q).\\
+The resulting equation was developed as Equation \ref{eq:Thesis4}:\\
+\begin{equation}
+\label{eq:Thesis4}
+p(CompressorStall|N_{CombinedFlights}) = \beta_0 
++ \displaystyle\sum_{i=1}^{p}\beta_i*AR_i
++ \displaystyle\sum_{j=1}^{q}\beta_{j+p}*MA_j + \epsilon)
+\end{equation}
+
+Where N indicates the number of combined flights data used, currently, $N=1,2,...,7$. $AR_{i,k}$ is the AR coefficients $i=1,2,...,p$ and $MA_{j,k}$ is the MA coefficients $j=1,2,...,q$. 
+This Probability Model of Compressor Stall Fault Event is based on the data as described below:\\
+
+\begin{center}
+$\left(
+\begin{matrix}
+y_1\\
+y_2\\
+\vdots \\
+y_m\\
+y_{m+1}\\
+\vdots\\
+y_n
+\end{matrix}
+\right)$ 
+$\sim$
+$\left(
+\begin{matrix}
+AR_{1_1} & AR_{2_1} & \dots & AR_{p_1} & MA_{1_1} & MA_{2_1} & \dots & MA_{q_1}\\
+AR_{1_2} & AR_{2_2} & \dots & AR_{p_2} & MA_{1_2} & MA_{2_2} & \dots & MA_{q_2}\\
+\vdots    & \vdots    & \ddots & \vdots    & \vdots    & \vdots    & \ddots & \vdots\\
+AR_{1_n} & AR_{2_n} & \dots & AR_{p_n} & MA_{1_n} & MA_{2_n} & \dots & MA_{q_n}
+\end{matrix}\right)$
+\end{center}
+Where the response variable (independent variable) $\left( y_1, y_2, ..., y_m \right)$ indicates compressor stall fault event did happened for engine 1 to engine m, and $\left( y_{m+1}, ..., y_n \right)$ indicates NO stall fault event happened for engine (m+1) to engine n; $AR_{i,k}$ $\left( i = 1, 2, ..., p; k = 1, 2, ..., n \right)$ and $MA_{j,k}$ $\left( j = 1, 2, ..., q; k = 1, 2, ..., n \right)$ are the regressor variables (explanatory variables) which are AutoRegression (AR) coefficients and Moving Average (MA) coefficients of the fitted arima(p,0,q) model from each set of first-order differenced VG data.\\
+Currently m = 6 and n = 28. This reflects that the data consists of 14 aircraft (equipped with a total of 28 engines), and that 6 of the engines have compressor stall fault events.\\
+
+\newpage
+\newpage
+\section{Research and Development Process}
+\subsection{Sample Aircraft RTED Data}
+
+The locations of certain engine sensors are shown in Figure [\ref{fig:sensorlocations}].
+\begin{figure}[!h]
+\setkeys{Gin}{width=0.75\textwidth}
+\begin{center}
+\includegraphics{sensorlocation.jpg}
+\caption{Locations illustrated for three interested sensors (T2C, NG and IGV)}
+\label{fig:sensorlocations}
+\end{center}
+\end{figure}
+
+
+By the observation of the RTED data available, we found out that there are 3 (three) situations about the to be sampled data sets, which are described as following figures as Fifgure \ref{fig:situation1}, Fifgure \ref{fig:situation2} and Fifgure \ref{fig:situation3}. To make our sample data representative to the real world situations better we choose to sample each aircraft once (seven sorties). Fore example, in situation 1 (see Figure \ref{fig:situation1}) we would choose two sets of data from same aircraft but we choose to only select one set of data most recently available.
+
+\begin{figure}[!h]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_1.jpg}
+\caption{Sample Aircraft RTED Data - Situation 1}
+\label{fig:situation1}
+\end{center}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_2.jpg}
+\caption{Sample Aircraft RTED Data - Situation 2}
+\label{fig:situation2}
+\end{center}
+\end{figure}
+
+\begin{figure}[!h]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_3.jpg}
+\caption{Sample Aircraft RTED Data - Situation 3}
+\label{fig:situation3}
+\end{center}
+\end{figure}
+
+\hfill\break \hfill\break 
+We have formed 7 (seven) series of data set called N-Combined-Flight Data where N = (1, 2, ..., 7). Following Figure \ref{fig:combine} illustrats how we combine the flight data.
+
+\begin{figure}[!h]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_combined_data.jpg}
+\caption{Form combined data from selected sample data}
+\label{fig:combine}
+\end{center}
+\end{figure}
+
+\hfill\break 
+
+\newpage
+\subsection{Data Exploratory}
+First, original sensor data is oberved and exploratory plots have been studied, one is shown here as Figure \ref{fig:3sensors}. ASN is the original Aircraft Series Number.
+
+\begin{figure}[!h]
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+\includegraphics{original_3sensor_data.jpg}
+\caption{Form combined data from selected sample data. Left engine data and right engine data have been separated already.}
+\label{fig:3sensors}
+\end{center}
+\end{figure}
+
+Thereafter, an R program has been used to calculate the VG values and save the results into two separate data files for left-side and right-side engines respectively.  Refer to existing GE documents (Reference \cite{Northrop2010}) for a definition of VG and its experimental meanings. (See Figure \ref{fig:NegativecombVG} and Figure \ref{fig:PositivecombVG} for orginial VG data. See Figure \ref{fig:NegativecombVGdiff} and Figure \ref{fig:PositivecombVGdiff} for first order differenced VG data.) Reference \cite{Luca2003}, Reference \cite{Ganguli2004}.
+
+<<dataDEF, echo=FALSE, fig=FALSE, eval=FALSE>>=
+workDir <- "/home/albert/simplifiedthesis/data"
+k <- 3
+filezN1 <- list.files(path=workDir, pattern="Negative_comb_1", full.names = TRUE)
+filezN3 <- list.files(path=workDir, pattern="Negative_comb_3", full.names = TRUE)
+filezN5 <- list.files(path=workDir, pattern="Negative_comb_5", full.names = TRUE)
+filezN7 <- list.files(path=workDir, pattern="Negative_comb_7", full.names = TRUE)
+DatN1 <- read.csv(filezN1[k])
+DatN1 <- DatN1[which(DatN1[,2] < 10 & DatN1[,2] > -10), 2]
+DatN1 <- ts(DatN1)
+DatN3 <- read.csv(filezN3[k])
+DatN3 <- DatN3[which(DatN3[,2] < 10 & DatN3[,2] > -10), 2]
+DatN3 <- ts(DatN3)
+DatN5 <- read.csv(filezN5[k])
+DatN5 <- DatN5[which(DatN5[,2] < 10 & DatN5[,2] > -10), 2]
+DatN5 <- ts(DatN5)
+DatN7 <- read.csv(filezN7[k])
+DatN7 <- DatN7[which(DatN7[,2] < 10 & DatN7[,2] > -10), 2]
+DatN7 <- ts(DatN7)
+filezP1 <- list.files(path=workDir, pattern="Positive_comb_1", full.names = TRUE)
+filezP3 <- list.files(path=workDir, pattern="Positive_comb_3", full.names = TRUE)
+filezP5 <- list.files(path=workDir, pattern="Positive_comb_5", full.names = TRUE)
+filezP7 <- list.files(path=workDir, pattern="Positive_comb_7", full.names = TRUE)
+DatP1 <- read.csv(filezP1[k])
+DatP1 <- DatP1[which(DatP1[,2] < 10 & DatP1[,2] > -10), 2]
+DatP1 <- ts(DatP1)
+DatP3 <- read.csv(filezP3[k])
+DatP3 <- DatP3[which(DatP3[,2] < 10 & DatP3[,2] > -10), 2]
+DatP3 <- ts(DatP3)
+DatP5 <- read.csv(filezP5[k])
+DatP5 <- DatP5[which(DatP5[,2] < 10 & DatP5[,2] > -10), 2]
+DatP5 <- ts(DatP5)
+DatP7 <- read.csv(filezP7[k])
+DatP7 <- DatP7[which(DatP7[,2] < 10 & DatP7[,2] > -10), 2]
+DatP7 <- ts(DatP7)
+DatN1d <- diff(DatN1)
+DatN3d <- diff(DatN3)
+DatN5d <- diff(DatN5)
+DatN7d <- diff(DatN7)
+DatP1d <- diff(DatP1)
+DatP3d <- diff(DatP3)
+DatP5d <- diff(DatP5)
+DatP7d <- diff(DatP7)
+@
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.9\textwidth}
+<<originalplotsN, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatN1, xlab = "Data Points",
+                ylab = "Variable Geometry Value", col="blue")
+lines(rep(0,length(DatN1)),col="green")
+plot(DatN3, xlab = "Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN3)),col="green")
+plot(DatN5, xlab="Data Points",
+                ylab = "Variable Geometry Value", col="blue")
+lines(rep(0,length(DatN5)),col="green")
+plot(DatN7, xlab="Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN7)),col="green")
+@
+\caption{Variable Geometry (VG) Value calculation demonstration, for those data set WITHOUT compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data and Down-Right: 7-Combined-Flights Data.}
+\label{fig:NegativecombVG}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.9\textwidth}
+<<originalplotsP, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatP1, xlab = "Data Points",
+                ylab = "Variable Geometry Value", col="red")
+lines(rep(0,length(DatP1)),col="green")
+plot(DatP3, xlab = "Data Points)",
+                ylab = "", col="red")
+lines(rep(0,length(DatP3)),col="green")
+plot(DatP5, xlab="Data Points",
+                ylab = "Variable Geometry Value", col="red")
+lines(rep(0,length(DatP5)),col="green")
+plot(DatP7, xlab="Data Points",
+                ylab = "", col="red")
+lines(rep(0,length(DatP7)),col="green")
+@
+\caption{Variable Geometry (VG) Value calculation demonstration, for those data set WITH compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data and Down-Right: 7-Combined-Flights Data.}
+\label{fig:PositivecombVG}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.9\textwidth}
+<<diffplotsN, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatN1d, xlab = "Data Points",
+                ylab = "First Order Differenced VG Value", col="blue")
+lines(rep(0,length(DatN1d)),col="green")
+plot(DatN3d, xlab = "Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN3d)),col="green")
+plot(DatN5d, xlab="Data Points",
+                ylab = "First Order Differenced VG Value", col="blue")
+lines(rep(0,length(DatN5d)),col="green")
+plot(DatN7d, xlab="Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN7d)),col="green")
+@
+\caption{First order differenced VG Value calculation demonstration, for those data set WITHOUT compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data and Down-Right: 7-Combined-Flights Data.}
+\label{fig:NegativecombVGdiff}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.9\textwidth}
+<<diffplotsP, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatP1d, xlab = "Data Points",
+                ylab = "First Order Differenced VG Value", col="red")
+lines(rep(0,length(DatP1d)),col="green")
+plot(DatP3d, xlab = "Data Points)",
+                ylab = "", col="red")
+lines(rep(0,length(DatP3d)),col="green")
+plot(DatP5d, xlab="Data Points",
+                ylab = "First Order Differenced VG Value", col="red")
+lines(rep(0,length(DatP5d)),col="green")
+plot(DatP7d, xlab="Data Points",
+                ylab = "", col="red")
+lines(rep(0,length(DatP7d)),col="green")
+@
+\caption{First order differenced VG Value calculation demonstration, for those data set WITH compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data and Down-Right: 7-Combined-Flights Data.}
+\label{fig:PositivecombVGdiff}
+\end{center}
+\end{figure}
+
+VG time series data is generated by combining flights 1 (one) through 7 (seven). Following equations have been used to explain how the N-Combined-Flight Data constructured. \\
+For example, for 1-Flight Data: 
+\begin{equation}
+VG(t)_{aircraft_i,1Flight} = f(T2C(t)_{aircraft_i,flight_j} + NG(t)_{aircraft_i,flight_j} 
+                                + IGV(t)_{aircraft_i,flight_j})
+\end{equation}
+Where this is aircraft i, the j is the highest flight number in our selection of this aircraft.\\
+For 2-Combined-Flights Data:
+\begin{equation}
+VG(t)_{aircraft_i,2CombinedFlights} = VG(t)_{aircraft_i,1Flight_j}
+                                      + VG(t)_{aircraft_i,1Flight_{(j-1)}}
+\end{equation}
+Where this is aircraft i, the (j-1) is the second highest flight number in our selection of this aircraft.\\
+For N-Combined-Flight Data: $(N=2,3,...,7)$
+\begin{equation} \begin{split}
+VG(t)_{aircraft_i,NCombinedFlights} =\hspace{1pt}&VG(t)_{aircraft_i,1Flight_j}\\
+                +&VG(t)_{aircraft_i,1Flight_{(j-1)}} + ... + VG(t)_{aircraft_i,1Flight_{(j-N+1)}}
+\end{split} \end{equation}
+Where this is aircraft i, the (j-1) is the second highest flight number in our selection of data for this aircraft, the (j-N+1) is the $(N-1)^{th}$ lower that the highest flight number in our selection of data for this aircraft.\\
+The first order differenced VG time series data was constructed as following equations shown.
+\begin{equation} \begin{split}
+diff \{ VG(t)_{aircraft_i,NCombinedFlights} \} = &VG(t)_{aircraft_i,NCombinedFlights}\\
+                                                - &VG(t-1)_{aircraft_i,NCombinedFlights}
+\end{split} \end{equation}
+Thereafter, the constructed first order differenced VG time series data was then used to develop an $arima(p,0,q)$ model in R.\\
+
+
+For example, process the sample data of Figure 18, is fit to an arima(12,0,4) model for the first order of VG data, by use of an R script, the  of arima(12,0,4) is calculated as
+(-0.1815, 0.0002387, 0.01500, 0.03247, 0.02954, -0.002241, 0.05759, 0.04050, 0.006447, 0.01128, 0.01244, 0.02152, -0.05026, 0.04650, 0.02096, -0.01320)\\
+Where the first 12 coefficients are called AR coefficients, and the last 4 coefficients are called MA coefficients, because p = 12 and q = 4 in an arima(p,0,q) model here.
+And the  of arima(12,0,4) is calculated as\\
+(0.0003720, -0.0002028, -0.00002361, -0.0002780, 0.00001439, 0.00003668, 0.00005502, 0.00005025, 0.00005391, 0.00006573, 0.00003563, 0.00005364, -0.0003380, 0.0003338, -0.00001389, 0.0003176)\\
+Thus, the ratio of coefficient to variance of coefficient  is calculated as
+(487.84, 1.18, 635.56, 116.78, 2053.07, 61.09, 1046.79, 805.91, 119.60, 171.66, 349.30, 401.21, 148.69, 139.29, 1508.98, 41.57)\\
+The second AR coefficient (AR2) is not significant because its ratio of coefficient to variance of coefficient valued as of 1.18. The rest of the coefficients of arima(12,0,4) model are significant. Therefore the  can be calculated as\\
+Lower than $100\%$ indicating some coefficients are not significant. It is estimated that compounding factors and non-flight-state-separated data play roles to make some of the arima model coefficients non-significant.\\
+
+
+
+\begin{equation}
+R^{2}_{adj}=1-(1-R^2)\frac{n-1}{n-p-1}
+\end{equation}
+Where its number of repressor is a combination of terms (p+q) in arima(p,0,q),  it becomes clear that a larger sample size would lead to better $R^{2}_{adj}$ in LRM.\\
+For example, if $R^2=0.80$ and $R^{2}_{adj}=0.75$ are the desired objectives and the intent is to use the arima(20,0,6) model, then the sampling size of $n=131$ would be required.\\
+Another example, if $R^2=0.85$ and $R^{2}_{adj}=0.70$ are the desired objectives and the intent is to use the arima(12,0,4) model, then the sampling size of $n=49$ would be required.
+
+
+\newpage
+\begin{appendix}
+  \listoffigures
+  \listoftables
+\end{appendix}
+\newpage
+\printbibliography
+\end{document}
