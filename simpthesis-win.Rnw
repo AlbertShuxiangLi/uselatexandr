@@ -1,0 +1,577 @@
+\documentclass[letterpaper, 0pt]{article}
+\setlength{\footskip}{40pt}
+
+\setlength{\textheight}{8.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\voffset}{1pt}
+\setlength{\hoffset}{1pt}
+\setlength{\oddsidemargin}{1pt}
+\setlength{\topmargin}{1pt}
+\setlength{\marginparwidth}{55pt}
+
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\addbibresource{simpthesis.bib}
+\usepackage{graphicx}
+\usepackage{gensymb}
+
+\pagestyle{fancy}
+\fancyhf{}
+\title{A METHOD TO PREDICT COMPRESSOR STALL IN THE TF34-100 TURBOFAN ENGINE UTILIZING REAL-TIME PERFORMANCE DATA}
+\date{18 June 2015}
+\author{Mr. Shuxiang Albert Li, BS \\ Civilian, USAF\\ Mr. G Travor Gones, BS \\ Civilian, USAF}
+\SweaveOpts{echo=true}
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\chead{\LaTeX\hspace{5pt}A Method to Predict Compressor Stall in the Turbofan Engine TF34-100 \\ Utilizing Real-Time Performance Data, AFIT-ENV-MS-15-J-036}
+
+\linespread{1.6}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\pagenumbering{gobble}
+\maketitle
+
+\begin{center}
+\hfill\break \hfill\break
+THESIS\\
+Presented to the Faculty\\
+Department of Systems Engineering and Management\\
+Graduate School of Engineering and Management\\
+Air Force Institute of Technology\\
+Air University\\
+Air Education and Training Command\\
+In Partial Fulfillment of the Requirements for the\\
+Degree of Master of Science in Systems Engineering\\
+\hfill\break \hfill\break \hfill\break \hfill\break
+\textbf{DISTRIBUTION STATEMENT A.} \\ APPROVED FOR PUBLIC RELEASE; DISTRIBUTION UNLIMITED.
+\end{center}
+\newpage
+\hfill\break
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.85\textwidth}
+\begin{center}
+\includegraphics{thesis_cover.jpg}
+\caption{Original Thesis Cover Page}
+\label{fig:original-cover}
+\end{center}
+\end{figure}
+
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+\section{Abstract}
+Air Force current operations continue to undergo significant changes compelled by decreasing fiscal appropriations, aging aircraft, and personnel drawdown.  The Air Force must effectively improve current maintenance operations in part to deal with these challenges. This study will explore the area of the A-10 aircraft fleet’s TF34-100 high-pass turbo–fan engine sensor data to seek its deterioration modelling and prognostics capability.  In futurity this will allow for achievement of greater confidence in predicting the compressor stall which leads to engine performance deterioration and a costly repair in maintenance.  By utilizing an innovative method to forecast the probability of compressor stall, according to individual engine sensor data which has recently become available, it will be possible to achieve significant benefits in both maintenance planning and mission scheduling (which will greatly reduce the associated costs of maintenance servicing).
+ 
+\newpage
+\section{Acknowledgments}
+We would like to express our sincere appreciation to our faculty advisor, Major Jason Freels, for his guidance and support throughout the course of this thesis effort.  The insight and experience are certainly appreciated.  We would, also, like to thank Mr. Jeff Hanson of Air Force Engineering and Technical Services (AFETS), Mr. Robert Bowels and Mr. Kenneth Hurst of Southwest Research Institute (SwRI) for their insight and tutorial assistance in developing this research.\\
+\hfill\break \hfill\break
+Shuxiang ‘Albert’ Li\\
+G. Trevor Jones  
+
+\newpage
+\section{Introduction}
+\subsection{General Issue}
+The aim of preventive maintenance is to reduce the number of unexpected downtimes and therefore, the number of unscheduled maintenance actions.  Unscheduled maintenance is an undesirable situation in which a failed component must be repaired or replaced before the system can return to service.  Such unprecedented failures can interrupt delivery schedules, cause further system damage, and result in additional monetary burdens.  For many components, maintenance may best be carried out in a proactive and preventive manner.  This research focuses on the application of preventive maintenance for the TF34-100 jet engine to prevent engine compressor stalls for the A-10 aircraft.  Due to their destructive nature, compressor stalls are a significant concern in axial flow compressor jet engines.\\
+A compressor stall is caused by air approaching the compressor blades at an angle greater than their stalling angle resulting in a localized disruption of the airflow.  The compressor blades act like small, cambered wings with very high aspect ratios; like high aspect ratio wings, the blades have relatively low stalling angles.  Below the stalling angle, an increase in the angle of attack produces a proportional increase in the coefficient of lift.  But, at angles beyond the stalling angle, the airflow separates from the upper surfaces.  This causes a rapid decrease in coefficient of lift, with the departing air forming a highly turbulent wake downstream of the blade.  This turbulent flow then moves downstream passes over the stator blades behind and into the next row of rotors.  The process from this point onwards can take a number of forms.  In many cases the turbulence is simply flushed through the engine, such that only one or two blades stall.  In this case there will be few if any outward indications that a stall has occurred.  In the next level of severity, the initial stall might cascade rearwards, such that several rows of blades are affected, before the subsequent stages regain control of the air.  In this case, the pilot might detect a sudden increase in internal temperature and increased vibration from the engine.  The next level of severity, with the stall cascading all the way back through the compressor, will obviously increase the severity of the outward symptoms.  Some engine types can behave in quite bizarre manners.  Some US military turbofans introduced in the seventies or eighties, for example, exhibited what is termed a locked-in rotating stall.  In this case the stalling of a single blade cascaded not downstream, but onto the next rotor blade on that disc.  This caused a small pocket of stall to rotate in the opposite direction to the engine, but at about half of the engine’s revolutions per minute (RPM).  The engine would continue to run and produce some thrust.\\
+A blade's stalling angle is not entirely fixed.  Structural damage caused by the ingestion of hard objects, sand, and de-icing fluid can all reduce the stalling angle.  Engines tend to stall more easily as they age, or if their compressors become iced or dirty.  The degree to which the engine is able to control its airflow increases from front to rear.  This is because the first row of rotor blades must accept whatever airflow they meet, whereas the subsequent rows receive air from the blades ahead of them.\\
+The most common method of stall prevention is the use of variable angle inlet guide vanes (VIGV).  These are an additional row of non-rotating blades, immediately ahead of the first row of rotors.  By changing the pitch angle of these vanes, the angle of the incoming airflow is varied to ensure that the angle of attack of the first row of rotors is always less than their stalling angle.  This method is employed in the TF34-100 A-10 engines.\\
+\subsection{Problem Statement}
+Until recently, sufficient data has not been available to elicit a predictive maintenance program for the A-10.  However, a recent modification to the A-10 data accumulation ability has made available a broad range of sensor data.  The current A-10 compressor stall maintenance process is to apply corrective maintenance after a stall has occurred.  This reactive process can produce many issues, not the least of which is safety to the pilot when a compressor stalls during flight.  Developing a predictive preventative maintenance process for compressor stall, with the recent additional aforementioned engine sensor data, would greatly benefit the A-10 program.\\
+A-10 engine SMEs that analyze compressor stall and other engine problems are using fault event statistical data, in an attempt to derive some form of a logistical strategy planning. Some engine studies examine the engine performance deterioration data to develop a type of preventive maintenance routine. (See articles listed in the biography. Reference \cite{Luca2003} and Reference \cite{Ganguli2004}) There is an apparent lack of a predictive method for compressor stall (or similar problems) concerning each individual engine, which method would be based upon the associated individual engine’s real time sensor data of that particular turbofan engine.\\
+\newpage
+\subsection{Research Flow}
+This study explores the relationship between real-time engine sensor data to engine compressor stalls to develop a quantifiable algorithm from this engine sensor data which can be applied toward predictive preventative maintenance.\\
+The biggest initial question is if a connection between the compressor stall fault events to the particular parameters of engine performance sensor data can be derived. Numerous discussions with engine subject matter experts (SMEs) and engine maintenance SMEs, concluded that compressor stall fault events would be most likely associated with the compressor discharge pressure (PS3), turbo discharge pressure (PT5), and variable geometry (VG).\\
+Typical A-10 engine SMEs’ primary investigations and discussions, suggests that the VG parameter is the leading indicator for the deterioration of the engine control mechanism which, in turn, is the major factor in the development of compressor stall. The VG measure was created by the engine manufacturer General Electric to assess the discrepancy between the theoretical value of the guide vane positioning, (the ideal value for an engine to perform under pristine working environmental conditions) and the actual value as measured. Current VG calculation algorithm does not show the “theoretical value” but only the difference between the theoretical value and the actual value. 
+When the A-10 engine and engine maintenance SMEs perform a compressor stall case study, they will discount any VG value out of $\pm$1.5\degree \hspace{1pt}as a reference point to future problems. How the VG values associated to a compressor stall fault event and to what extent of its degree is unknown so far. Also it is needed to point out that, it is an experiment-derived formula for General Electric to calculate the VG value from three sensors. (See Reference\cite{Northrop2010}). Those sensors are Compressor Inlet Temperature (T2C) sensor (also called CIT), the Core Speed sensor (NG), and the Inlet Guide Vane sensor (IGV).\\
+The indication of this research is that the VG data contains information associated to the engine stall deterioration mechanism. By modeling this VG data of individual engines, the resulting modeling coefficients will be representatives of that deterioration mechanism. By collecting multiple flight data from multiple engines, the subsequent regression data model will reveal the probability of a compressor stall event statistically related to such a deterioration mechanism.
+The locations of certain engine sensors are shown in Figure [\ref{fig:sensorlocations}].
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.75\textwidth}
+\begin{center}
+\includegraphics{sensorlocation.jpg}
+\caption{Locations illustrated for three interested sensors (T2C, NG and IGV)}
+\label{fig:sensorlocations}
+\end{center}
+\end{figure}
+The recent increase in available engine sensor data from the A-10 aircraft includes many different types of sensor data that vary in type and location.  This research will particularly concentrate on compressor stall symptoms, which make up the majority cost of repair / maintenance for A-10 engines, by identifying a pattern of a precursor or constant in the now available recorded engine sensor data.
+Two types of compressor stall are observed in practice where each type is characterized by a distinct set of sensor conditions. See Table [\ref{tab:stalltype}].
+\begin{table}[h!]
+  \begin{center}
+    \caption{Type of compressor stalls}
+    \label{tab:stalltype}
+    \begin{tabular}{l||c|r}
+       & WESA & AoA in Envelope\\
+      \hline
+      PLA & >= 12\degree & >= 12\degree\\
+      \hline
+      PS3(\% drop over 500ms) & >25 \% & >50\%\\
+      \hline
+      NF & 7\% & \\
+      \hline
+      AoA & in envelope for mach number & in envelope for mach number\\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage
+\subsection{Methodology}
+Engine sensor data is Time Series data: raw data that is collected from the General Electric TF34-100 engine sensors after each sortie, using a software program entitled “ASIST” developed by Southwest Research Institute (SwRI).  This study will fit the raw flight sensor data with an ARIMA model.  Utilizing the outcomes from the modeling, a probability model will then be fitted in order to determine the chance of compressor stall occurring.\\
+To ensure that a high fidelity state is maintained within the study, the impact of two known variance issues will be addressed and reduced.  First is the sensor variance.  This is an inherent variance associated with the nature of real world engineering data.  Secondly is the modeling variance.  This variance is related to the adequacy of the proposed model.\\
+The following strategic steps were conducted during this study’s research.  Sample data was collected to conduct a primary investigation.  Existing software analysis tool, entitled ASIST, is used to detect the fault events after each flight.  A large amount of effort was employed to filter out or reduce the extent of sensor failure, sensor normal and abrupt variance.  Through trial and error it was found that ARIMA modeling is appropriate for the VG data.  This required many attempts to identify an adequate model and the necessary programming for the ARIMA model.  These results yielded the Equation \ref{eq:Thesis3}:\\
+\begin{equation}
+\label{eq:Thesis3}
+X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + \dots + AR_pX_{t-p} + A_t
+        - MA_1A_{t-1} - MA_2A_{t-2} - \dots - MA_qA_{t-q}
+\end{equation}
+Where $X_t=X(t)=VG(t)$ is the VG value at the time , $AR_i$is the AutoRegression (AR) coefficient, and $MA_j$ is the Moving Average (MA) coefficient. This model is denoted as arima(p,0,q).\\
+Next a large population data was collected to develop the associated model.  This was followed by identifying the model variables and selecting an ARIMA model.  The estimate parameters were identified for first order differenced VG data.  Then the model was checked for adequacy. Finally a probability model was fitted for compressor stall symptoms.  The resulting equation was developed as Equation \ref{eq:Thesis4}:\\
+\begin{equation}
+\label{eq:Thesis4}
+p(CompressorStall|N_{CombinedFlights}) = \beta_0 
++ \displaystyle\sum_{i=1}^{p}\beta_i*AR_i
++ \displaystyle\sum_{j=1}^{q}\beta_{j+p}*MA_j + \epsilon)
+\end{equation}
+Where  indicates number of flights data used, currently, N = 1, 2, … 7.   is the AR coefficients (i = 1, 2, … p) and  is the MA coefficients (j = 1, 2, … q). 
+This Probability Model of Compressor Stall Fault Event is based on the data as described below:\\
+\begin{center}$\left(
+\begin{matrix}
+y_1\\
+y_2\\
+\vdots \\
+y_m\\
+y_{m+1}\\
+\vdots\\
+y_n
+\end{matrix}
+\right)$ $\sim$ $\left(
+\begin{matrix}
+AR_{1_1} & AR_{2_1} & \dots & AR_{p_1} & MA_{1_1} & MA_{2_1} & \dots & MA_{q_1}\\
+AR_{1_2} & AR_{2_2} & \dots & AR_{p_2} & MA_{1_2} & MA_{2_2} & \dots & MA_{q_2}\\
+\vdots    & \vdots    & \ddots & \vdots    & \vdots    & \vdots    & \ddots & \vdots\\
+AR_{1_n} & AR_{2_n} & \dots & AR_{p_n} & MA_{1_n} & MA_{2_n} & \dots & MA_{q_n}
+\end{matrix}\right)$\end{center}
+Where the response variable (independent variable) $\left( y_1, y_2, ..., y_m \right)$ indicates compressor stall fault event DID NOT happen for engine 1 to engine m, and $\left( y_{m+1}, ..., y_n \right)$ indicates compressor stall fault event DID happen for engine (m+1) to engine n; $AR_{i,k}$ $\left( i = 1, 2, ..., p; k = 1, 2, ..., n \right)$ and $MA_{j,k}$ $\left( j = 1, 2, ..., q; k = 1, 2, ..., n \right)$ are the regressor variables (explanatory variables) which are AutoRegression (AR) coefficients and Moving Average (MA) coefficients of the fitted arima(p,0,q) model from each set of first-order differenced VG data.\\
+Currently m = 6 and n = 28. This reflects that the data consists of 14 aircraft (equipped with a total of 28 engines), and that 6 of the engines have compressor stall fault events.\\
+
+\newpage
+\subsection{Assumptions/Limitations}
+The first assumption is that the flight sensor data file is consistent, without missing one flight as a whole or any in-flight data points.\\
+The second assumption is that the VG calculations are a correct discrepancy function of the theoretical value compared to actual value for the engine control mechanism.\\
+For the third assumption, it is assumed that the major contributing factor to a compressor stall fault event is the variable geometry (VG) and that the other factors are minor.\\
+The data for a particular engine has to be tracked every flight, which includes events of changing the engine into the studied aircraft. In other words, the engine number needs to be consistent for any study. Thankfully the ASIST software is very useful in identifying particular engine series numbers contained in the RTED data files. For the purpose of this study, those RTED data files have to be converted to csv files, and then introduced to the R programming of this research.\\
+The model adequacy of the developed compressor stall Fault Event Probability Model can be checked by the theoretical calculations presented in this study, but the verification of the modelling adequacy check for the real world data is not validated yet. That is, the forecasted data from the proposed compressor stall Fault Event Probability Model will eventually need to go through a verification test for certain duration of time with real world data, such as 12 to 24 months, to check the accuracy of the fitted model with the A-10 fleet of engines.\\
+
+\subsection{Implications}
+
+If a more proactive method to conduct maitenance can be achieved for the A-10 TF34-100 engine, then a great amount of benefit will be realized not only in cost saving for engine repair, but also in aircraft/pilot safety and longer engine lifetime. That is, this method can save many millions of dollars, increase the engine's reliability, and ensure a greater safety for A-10 pilots.
+
+\newpage
+\section{Research and Development Process}
+\subsection{Sample Aircraft RTED Data}
+
+By the observation of the RTED data available, we found out that there are 3 (three) situations about the to be sampled data sets, which are described as following figures as Fifgure \ref{fig:situation1}, Fifgure \ref{fig:situation2} and Fifgure \ref{fig:situation3}. To make our sample data representative to the real world situations better we choose to sample each aircraft once (seven sorties). Fore example, in situation 1 (see Figure \ref{fig:situation1}) we would choose two sets of data from same aircraft but we choose to only select one set of data most recently available.
+
+\begin{figure}[h!]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_1.jpg}
+\caption{Sample Aircraft RTED Data - Situation 1}
+\label{fig:situation1}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_2.jpg}
+\caption{Sample Aircraft RTED Data - Situation 2}
+\label{fig:situation2}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_situation_3.jpg}
+\caption{Sample Aircraft RTED Data - Situation 3}
+\label{fig:situation3}
+\end{center}
+\end{figure}
+
+\hfill\break \hfill\break 
+We have formed 7 (seven) series of data set called N-Combined-Flight Data where N = (1, 2, ..., 7). Following Figure \ref{fig:combine} illustrats how we combine the flight data.
+
+\begin{figure}[h!]
+\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{sample_combined_data.jpg}
+\caption{Form Combined Data from Selected Sample Data}
+\label{fig:combine}
+\end{center}
+\end{figure}
+
+\hfill\break 
+
+\newpage
+\subsection{Data Exploratory}
+First, original sensor data is oberved and exploratory plots have been studied, one is shown here as Figure \ref{fig:3sensors}. ASN is the original Aircraft Series Number.
+
+\begin{figure}[h!]
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+\includegraphics{original_3sensor_data.jpg}
+\caption{Form combined data from selected sample data. Left engine data and right engine data have been separated already.}
+\label{fig:3sensors}
+\end{center}
+\end{figure}
+
+Thereafter, an R program has been used to calculate the VG values and save the results into two separate data files for left-side and right-side engines respectively.  Refer to existing GE documents (Reference \cite{Northrop2010}) for a definition of VG and its experimental meanings. (See Figure \ref{fig:NegativecombVG} and Figure \ref{fig:PositivecombVG} for orginial VG data. See Figure \ref{fig:NegativecombVGdiff} and Figure \ref{fig:PositivecombVGdiff} for first order differenced VG data.)
+
+<<dataDEF, echo=FALSE, fig=FALSE, eval=FALSE>>=
+workDir <- "C://simplifiedthesis/data"
+k <- 3
+filezN1 <- list.files(path = workDir, pattern = "Negative_comb_1", full.names= TRUE)
+filezN3 <- list.files(path = workDir, pattern = "Negative_comb_3", full.names= TRUE)
+filezN5 <- list.files(path = workDir, pattern = "Negative_comb_5", full.names= TRUE)
+filezN7 <- list.files(path = workDir, pattern = "Negative_comb_7", full.names= TRUE)
+DatN1 <- read.csv(filezN1[k])
+DatN1 <- DatN1[which(DatN1[,2] < 10 & DatN1[,2] > -10), ]
+DatN1 <- ts(DatN1[,2])
+DatN3 <- read.csv(filezN3[k])
+DatN3 <- DatN3[which(DatN3[,2] < 10 & DatN3[,2] > -10), ]
+DatN3 <- ts(DatN3[,2])
+DatN5 <- read.csv(filezN5[k])
+DatN5 <- DatN5[which(DatN5[,2] < 10 & DatN5[,2] > -10), ]
+DatN5 <- ts(DatN5[,2])
+DatN7 <- read.csv(filezN7[k])
+DatN7 <- DatN7[which(DatN7[,2] < 10 & DatN7[,2] > -10), ]
+DatN7 <- ts(DatN7[,2])
+DatN1d <- diff(DatN1)
+DatN3d <- diff(DatN3)
+DatN5d <- diff(DatN5)
+DatN7d <- diff(DatN7)
+filezP1 <- list.files(path = workDir, pattern = "Positive_comb_1", full.names= TRUE)
+filezP3 <- list.files(path = workDir, pattern = "Positive_comb_3", full.names= TRUE)
+filezP5 <- list.files(path = workDir, pattern = "Positive_comb_5", full.names= TRUE)
+filezP7 <- list.files(path = workDir, pattern = "Positive_comb_7", full.names= TRUE)
+DatP1 <- read.csv(filezP1[k])
+DatP1 <- DatP1[which(DatP1[,2] < 10 & DatP1[,2] > -10), ]
+DatP1 <- ts(DatP1[,2])
+DatP3 <- read.csv(filezP3[k])
+DatP3 <- DatP3[which(DatP3[,2] < 10 & DatP3[,2] > -10), ]
+DatP3 <- ts(DatP3[,2])
+DatP5 <- read.csv(filezP5[k])
+DatP5 <- DatP5[which(DatP5[,2] < 10 & DatP5[,2] > -10), ]
+DatP5 <- ts(DatP5[,2])
+DatP7 <- read.csv(filezP7[k])
+DatP7 <- DatP7[which(DatP7[,2] < 10 & DatP7[,2] > -10), ]
+DatP7 <- ts(DatP7[,2])
+DatP1d <- diff(DatP1)
+DatP3d <- diff(DatP3)
+DatP5d <- diff(DatP5)
+DatP7d <- diff(DatP7)
+filezN4 <- list.files(path = workDir, pattern = "Negative_comb_4", full.names= TRUE)
+DatN4 <- read.csv(filezN4[k])
+DatN4 <- DatN4[which(DatN4[,2] < 10 & DatN4[,2] > -10), ]
+DatN4 <- ts(DatN4[,2])
+DatN4d <- diff(DatN4)
+x.fit <- arima(DatN4d,order=c(12,0,4), optim.method = "Nelder-Mead")
+@
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+<<originalplotsN, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatN1, xlab = "Data Points",
+                ylab = "Variable Geometry Value", col="blue")
+lines(rep(0,length(DatN1)),col="green")
+plot(DatN3, xlab = "Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN3)),col="green")
+plot(DatN5, xlab="Data Points",
+                ylab = "Variable Geometry Value", col="blue")
+lines(rep(0,length(DatN5)),col="green")
+plot(DatN7, xlab="Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN7)),col="green")
+@
+\caption{Variable Geometry (VG) Value calculation demonstration, for those data set WITHOUT compressor stall fault event in next flight. Up-Left - 1 Combined Flight Data; Up-Right - 3 Combined Flight Data; Down-Left - 5 Combined Flight Data; Down-Right - 7 Combined Flight Data.}
+\label{fig:NegativecombVG}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+<<originalplotsP, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatP1, xlab = "Data Points",
+                ylab = "Variable Geometry Value", col="red")
+lines(rep(0,length(DatP1)),col="green")
+plot(DatP3, xlab = "Data Points)",
+                ylab = "", col="red")
+lines(rep(0,length(DatP3)),col="green")
+plot(DatP5, xlab="Data Points",
+                ylab = "Variable Geometry Value", col="red")
+lines(rep(0,length(DatP5)),col="green")
+plot(DatP7, xlab="Data Points",
+                ylab = "", col="red")
+lines(rep(0,length(DatP7)),col="green")
+@
+\caption{Variable Geometry (VG) Value calculation demonstration, for those data set WITH compressor stall fault event in next flight. Up-Left - 1 Combined Flight Data; Up-Right - 3 Combined Flight Data; Down-Left - 5 Combined Flight Data; Down-Right - 7 Combined Flight Data.}
+\label{fig:PositivecombVG}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+<<diffplotsN, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatN1d, xlab = "Data Points",
+                ylab = "First Order Differenced VG Value", col="blue")
+lines(rep(0,length(DatN1d)),col="green")
+plot(DatN3d, xlab = "Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN3d)),col="green")
+plot(DatN5d, xlab="Data Points",
+                ylab = "First Order Differenced VG Value", col="blue")
+lines(rep(0,length(DatN5d)),col="green")
+plot(DatN7d, xlab="Data Points",
+                ylab = "", col="blue")
+lines(rep(0,length(DatN7d)),col="green")
+@
+\caption{First order differenced VG Value calculation demonstration, for those data set WITHOUT compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data; Down-Right: 7-Combined-Flights Data.}
+\label{fig:NegativecombVGdiff}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
+<<diffplotsP, echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatP1d, xlab = "Data Points",
+                ylab = "First Order Differenced VG Value", col="red")
+lines(rep(0,length(DatP1d)),col="green")
+plot(DatP3d, xlab = "Data Points)",
+                ylab = "", col="red")
+lines(rep(0,length(DatP3d)),col="green")
+plot(DatP5d, xlab="Data Points",
+                ylab = "First Order Differenced VG Value", col="red")
+lines(rep(0,length(DatP5d)),col="green")
+plot(DatP7d, xlab="Data Points",
+                ylab = "", col="red")
+lines(rep(0,length(DatP7d)),col="green")
+@
+\caption{First order differenced VG Value calculation demonstration, for those data set WITH compressor stall fault event in next flight. Up-Left: 1-Flight Data; Up-Right: 3-Combined-Flights Data; Down-Left: 5-Combined-Flights Data; Down-Right: 7-Combined-Flights Data.}
+\label{fig:PositivecombVGdiff}
+\end{center}
+\end{figure}
+
+\hfill\break \hfill\break \hfill\break 
+VG time series data is generated by combining flights 1 (one) through 7 (seven). Following equations have been used to explain how the N-Combined-Flight Data constructured. \\
+For example, for 1-Flight Data: 
+\begin{equation}
+VG(t)_{aircraft_i,1Flight} = f(T2C(t)_{aircraft_i,flight_j} + NG(t)_{aircraft_i,flight_j} 
+                                + IGV(t)_{aircraft_i,flight_j})
+\end{equation}
+Where this is aircraft i, the j is the highest flight number in our selection of this aircraft.\\
+For 2-Combined-Flights Data:
+\begin{equation}
+VG(t)_{aircraft_i,2CombinedFlights} = VG(t)_{aircraft_i,1Flight_j}
+                                      + VG(t)_{aircraft_i,1Flight_{(j-1)}}
+\end{equation}
+Where this is aircraft i, the (j-1) is the second highest flight number in our selection of this aircraft.\\
+For N-Combined-Flight Data: $(N=2,3,...,7)$
+\begin{equation} \begin{split}
+VG(t)_{aircraft_i,NCombinedFlights} =\hspace{1pt}&VG(t)_{aircraft_i,1Flight_j}\\
+                +&VG(t)_{aircraft_i,1Flight_{(j-1)}} + ... + VG(t)_{aircraft_i,1Flight_{(j-N+1)}}
+\end{split} \end{equation}
+Where this is aircraft i, the (j-1) is the second highest flight number in our selection of data for this aircraft, the (j-N+1) is the $(N-1)^{th}$ lower that the highest flight number in our selection of data for this aircraft.\\
+The first order differenced VG time series data was constructed as following equations shown.
+\begin{equation} \begin{split}
+diff \{ VG(t)_{aircraft_i,NCombinedFlights} \} = &VG(t)_{aircraft_i,NCombinedFlights}\\
+                                                - &VG(t-1)_{aircraft_i,NCombinedFlights}
+\end{split} \end{equation}
+Thereafter, the constructed first order differenced VG time series data was used to develop an arima(p,0,q) model in R. This process can be mathmatically expressed as
+\begin{equation}
+X(t)=diff \{ VG(t)_{aircraft_i,NCombinedFlights} \}
+\end{equation}
+\begin{equation}
+x.fit <- arima(X(t), order=c(p,0,q), optim.method="Nelder-Mead")
+\end{equation}
+\begin{equation}
+AR_i=x.fit\$coef\left[ i \right] \hspace{2pt}where i=1,2,...,p
+\end{equation}
+\begin{equation}
+MA_j=x.fit\$coef\left[ j+p\right] \hspace{2pt}where j=1,2,...,q
+\end{equation}
+
+A compressor stall fault event probability model is created by deriving the associated AR and MA coefficients, shown as Equation \ref{eq:Thesis4}. Then, the model adequacy of the Linear Regression Model (LRM) is checked with well-known classical theoretical calculations. That is, an R build-in function  is used, which employs four calculations for plotting: first, Residuals versus Fitted Values; second, Normal Probability Plot of Standardized Residuals; third, Squared Root of Standardized Residuals versus Fitted Values; and four, Leverage versus Standardized Residuals.\\
+For the ARIMA model, it is necessary to check for stationarity and seasonality of the data.  Stationarity means that the data has a mean of zero (or very closed to zero).  Seasonality means the data has periodic fluctuations. This research did not observe any seasonality for the data, thus seasonality was not considered in the ARIMA model. Also, the first order differenced VG data demonstrated a good stationary quality, therefore, the version of ARIMA(p,0,q) used was without any seasonality feature. Mathematical calculation has beed made and it is determined that the mean values from one flight data to seven-combined-flights-data has the amplitude of 0.00002 to 0.00014. This provides a confidence check that any mean value impacts to the final Linear Regression Model (LRM) will be minor; therefore our final Probability Model of Compressor Stall Fault Event does not include a mean value as a regressor.
+
+\newpage
+\subsection{Check the ACF and PACF of VG Data}
+The normal practice for ARIMA modeling is that, at first, by plotting autocorrelation function (ACF) can pre-determine a proper MA order of q in ARIMA(p,0,q).  Secondly, by plotting a partial autocorrelation function (PACF) can pre-determine a proper AR order of p in arima(p,0,q). Please see Figure \ref{fig:acfpacf}.
+
+\begin{figure}[!h]\begin{center}
+\setkeys{Gin}{width=0.85\textwidth}
+<<echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(2,2))
+plot(DatN7,ylab = "ts(VG(t))")
+plot(DatN7d, ylab = "diff(ts)")
+acf(DatN7d,lag.max=25, main="")
+pacf(DatN7d,lag.max=35, main="")
+@
+\caption{For 7-Combined-Flights Data, here are the orginal ts transformed VG data (as ts(VG(t))), first order difference ts transformed VG data (as diff(ts)), ACF of first order differenced data and PACF of first order differenced data.}
+\label{fig:acfpacf}
+\end{center} \end{figure}
+
+The ACF plot, such as Figure \ref{fig:acf-7} shown below, shows a quick decay pattern along the x-axis (number of lags). After the lag = 6 point, all points are within a 95\% confidence interval band. Especially after the lag = 2 points, the amplitude is very small (<0.1). This demonstrated plot suggests that having a value of q = 6 would be very adequate for the model.  Even using a lower value of q = 2 may be adequate enough when using arima(p,0,q). Similar ACF studies are carried out for many combined flight data.  The findings are very similar to those indicated here.
+
+\begin{figure}[!h] \begin{center}
+\setkeys{Gin}{width=0.65\textwidth}
+<<echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(1,1))
+acf(DatN7d,lag.max=25, main="")
+@
+\caption{For 7-Combined-Flights Data, ACF of the first order differenced ts transformed VG data.}
+\label{fig:acf-7}
+\end{center} \end{figure}
+
+The PACF plot, such as Figure \ref{fig:pacf-7} shown below, indicates a not-so-quick decay pattern along the x-axis (number of lags). After the lag = 20 point, all points are within a 95\% confidence interval band. Especially after the lag = 16 points, the amplitude is very small (<0.025). This demonstrated plot suggests that setting p = 20 would be suitable for the model, and that setting p = 16 may be adequate enough when using arima(p,0,q). Similar PCF studies are carried out for even more combined flight data. The findings are very similar as to those indicated here.
+
+\begin{figure}[!h] \begin{center}
+\setkeys{Gin}{width=0.65\textwidth}
+<<echo=FALSE, fig=TRUE>>=
+<<dataDEF>>
+par(mfrow=c(1,1))
+pacf(DatN7d,lag.max=35, main="")
+@
+\caption{For 7-Combined-Flights Data, PACF of the first order differenced ts transformed VG data.}
+\label{fig:pacf-7}
+\end{center} \end{figure}
+
+\newpage
+\SweaveInput{subsection-arimaperformance.Rnw}
+
+\newpage
+\subsection{Performance Summary for arima(p,0,q) over Various Combined Flights Data}
+
+This study uses 28 sample engines, and have 1-flight-data up to 7-combined-flight-data, for a total of 196 (7x 28) samples.  It was desired to determine how the arima(p,0,q) performed over all the data by experimenting with 9 arima(p,0,q) models, which included a combination of p = 2, 4, 6 and q = 12,14,16 in arima(p,0,q). All csv results and all plots have been retained for future reference and potential revalidation.  A total of 22 samples with Negative fault (means no compressor stall is observed for next immediate flight) and 6 samples with Positive fault (means at least one compressor stall is observed for next immediate flight) have been examined respectively for their: mean values, UCI (Upper Confidence Interval) values, and LCI (Lower Confidence Interval) per 4 (four) performance parameters mentioned as above (, ,  and ), versus 1-flight-data to 7-combined-flight-data.
+The legends used are: Black ~ Negative, Red ~ Positive, Solid Lines ~ Mean, Dashed Lines ~ UCI, and Dotted Lines ~ LCI. 
+In general, the confidence interval can be calculated as
+
+Where  are the samples, is the mean of the samples,  is the confidence level, and  is the confidence coefficient,  is the standard deviation of the samples, and  is the sample size. Accordingly, the following R codes have been used to calculate the UCI and LCI with 95\% confidence level
+
+
+\newpage
+\subsection{Model Adequacy Check for arima(20,0,6) Model}
+
+An examination of the arima(20,0,6) model adequacy was conducted by the following three steps. Similar examinations are carried out for other arima(p,0,q) models, and the results are very consistent.
+First, check the arima(20,0,6) residuals with p-value vs lag plot. Max(lag) = 35 shown as illustrated. For 1-flight-data, all p-values are around 1 (0.92 ~1); for 4-combined-flights-data, lag (1, 25) have p-values almost equal to 1; for 7-combined-flight-data, lag (1, 23) have p-values almost equals to 1. According to  help file, the p-value represents the likelihood to be against independent. Therefore, the p-value near 1.0 indicates that the residual is independent, not against independence.  A p-value near 0 would indicates that the residual is not independent. This is different from the normal meaning of p-value for Linear Regression.
+The R codes used are:	
+
+
+Second, check the arima(20,0,6) residuals with Classical 4 Plots: residuals in order; ACF of residuals; histogram of residuals, and normal probability plot.  The run-order of residuals does not show any particular pattern.  The ACF of residuals illustrates only a first order is significant (this is very desirable). The Histogram plot shows that residuals are centered around zero and that all are distributed within the (-1,+1) region (this is desirable too). The Normal Probability Plot reveals to be within the (-1.5, +1.5) region, and the residuals are normally distributed.  The ideal situation is to be normally distributed within a (-2,+2) region. This check demonstrates the goodness of the residuals.
+The R codes used are:
+
+
+
+Third, check the arima(20,0,6) residuals with the R built-in function . It’s a combination of Standardized Residuals, ACF of Residuals, and p-values of Ljung-Box Statistics. The run-order of standardized residuals does not show any particular pattern.  That is, the ACF of residuals shows only first order is significant (this is good), and the p-values of Ljung-Box statistics showed near value of 1.
+The R code used is:
+
+
+The following are some example plots from 1-flight-data, 4-combined-flights-data, and 7-combined-flights-data. 
+
+
+\newpage
+\subsection{Model Adequacy Check for Probability Model of Compressor Stall Fault Event}
+
+The R built-in plotting function  have been used to check the adequacy of the fitted Linear Regression Model. Furthermore,  and  have been retrieved from the results of R built-in function .  Additionally the Model’s p-values (not the p-values of the fitted model’s coefficients) were calculated by using following R codes:
+
+Where ;  is the F probability distribution function built-in R programming.
+The following plots show the adequacy check for the “best fit” based upon the current selection of sample data. The LRM result would be better if the sample size were increased.
+According to 
+
+where  is the sampling size,  is the number of regressor (= p + q in arima(p,0,q)), a larger sample size would be very helpful to obtain a larger  if the same  can be somewhat retained.
+
+
+\newpage
+\section{Analysis and Results}
+\subsection{Results of arima(p,0,q) Model}
+The Model Adequacy Check for arima(p,0,q) model of a first order differenced VG data shows very good results (Refer to Figure 29 - Figure 37). The Normal Probability Plot also illustrates a very good fitness for the (-2,2) Normal Score range of data. (The observed tails may be related to the existing data during take-off period and during the landing period.) Two major steps have been taken to ensure the arima(p,0,q) adequacy.\\
+First, an R script is developed to check the 4 performance parameters of a to-be-specified arima(p,0,q) over various combined-flight-data . The performance parameters are: , , , and Percentage of Significant Coefficients (). (See Figure 22, Figure 23, Figure 24, Figure 25, Figure 26, Figure 27, and Figure 28.)\\
+Second, another R script is developed to check the residuals of a specified arima(p,0,q) model. The following plots are checked: Ljung-Box test p-value vs Lag; Residuals Sequence, ACF of Residuals, Histogram of Residuals, Normal Probability Plot of Residuals, and Standardized Residuals.\\
+The results of the examinations mentioned above are very promising. No major obstruction was observed. During the process, arima(20,0,6) was selected as the desired ARIMA model to be applied. The imposed time-constraints lead to the selection of a total of 28 sample engines, which turned out to be smaller than the desired sample size.
+
+
+\subsection{Results of Linear Regression Model (LRM)}
+The Model Adequacy Check for the Probability Model of the Compressor Stall Fault Event is accomplished in two parts. \\
+First, R built-in functions for linear regression plot(lm{stats}) are used, which compare the 4 plots as: Residuals vs Fitted Values, Scale –Location, Normal Probability, and Residuals vs Leverage (Cook’s Distance). For examples of these refer to: Figure 38, Figure 40, Figure 42, Figure 44, Figure 46, Figure 48, Figure 50, and Figure 52.\\ 
+Second, the Response vs Estimated Response plots (y vs y-hat plot) are checked as shown below as an intuitive visualization presentation. Blue dots with dashed lines illustrate the original responses which are detected by ASIST.  The black points with solid lines illustrate the estimated response by a fitted LRM. The order of arima(p,0,q) used and the resulting modeling parameters are also shown on each of the exemplary plots. Refer to Figure 63, Figure 64, and Figure 65.\\
+These plots demonstrate strong evidence that when more flight data is used to fit an arima(p,0,q) model, the higher order of an AR would lead to a better LRM.  This agrees with the findings of the PACF analysis mentioned in the previous sections. (See Figure 13, Figure 14, and Figure 15.) Utilizing an arima(20,0,6) model indicates a greater LRM, but current sample size impositions have artificially limited that option. Mathematically, when considering the equation
+\begin{equation}
+R^{2}_{adj}=1-(1-R^2)\frac{n-1}{n-p-1}
+\end{equation}
+Where its number of repressor is a combination of terms (p+q) in arima(p,0,q),  it becomes clear that a larger sample size would lead to better $R^{2}_{adj}$ in LRM.\\
+For example, if $R^2=0.80$ and $R^{2}_{adj}=0.75$ are the desired objectives and the intent is to use the arima(20,0,6) model, then the sampling size of $n=131$ would be required.\\
+Another example, if $R^2=0.85$ and $R^{2}_{adj}=0.70$ are the desired objectives and the intent is to use the arima(12,0,4) model, then the sampling size of $n=49$ would be required.
+
+\newpage
+\section{Conclusions and Recommendations}
+\subsection{Conclusions of Research}
+First, this study has successfully developed a method to use the proposed ARIMA-LRM method to predict engine compressor stall fault based on existing real time performance data (RTED) for the A-10 TF34-100 engines. \\
+Second, this modeling can now lead to significant maintenance cost savings for the USAF, increase the A-10’s reliability and, subsequently, the pilot’s safety.
+
+\subsection{Significance of Research}
+This is the first time a method has been proposed to predict the compressor stall fault event probability of an individual A-10 TF34-100 turbofan engine based on RTED data.
+
+\subsection{Recommendations for Future Actions}
+\begin{itemize}
+\item Establish an Engine Data Analysis team to monitor, track, and analyze A-10 fleet-wide engine data.
+\item Improve the proposed Probability Model for Compressor Stall Fault Event by utilizing all the available data for a larger sample size and a longer time period.
+\item Conduct a comparison of “Cost of Maintenances with Predicting Implemented” to “Cost of Maintenances without Predicting Implemented”.
+\end{itemize}
+
+\subsection{Recommendations for Future Research}
+\begin{itemize}
+\item Investigate the use of a Kalman Filter for the ability to suppress variance, and a better model.
+Use a Fast Fourier Transform to achieve higher computation efficiency.  Investigate other perspectives to achieve better models.
+\item Investigate whether a multivariate approach would yield a better model by adding more sensors into the explanatory variables.
+\item Use Bayesian Statistics to test the trustworthiness of the model.
+\item Study the effects of adding more engine faults into the response variables in an effort to gain a better understanding of the engine system. This would be a more comprehensive undertaking, and the complexity of work would be increased exponentially.
+\end{itemize}
+
+\subsection{Summary}
+An ARIMA-LRM method has now been developed to predict engine compressor stall fault based on real time performance data (RTED).  The ARIMA-LRM results for 1 flight-data, 3- and 4-combined-flights-data are very good. The ARIMA-LRM results for 2-, 5-, 6- and 7-combined-flights-data are not as desirable.  This model can be exploited to achieve a great benefit in cost savings for engine maintenance repairs, longer engine lifetimes, and also in increased aircraft/pilot safety.  That is, this method can save many millions of maintenance dollars, increase engine/mission reliability, and ensure a greater safety for A-10 pilots.
+
+\newpage
+\begin{appendix}
+\listoffigures
+\newpage
+\listoftables
+\end{appendix}
+\newpage
+\printbibliography
+%\printbibheading
+%\printbibliography[keyword=major,heading=subbibliography,title={Major Sources}]
+%\printbibliography[keyword=minor,heading=subbibliography,title={Minor Sources}]
+\end{document}
