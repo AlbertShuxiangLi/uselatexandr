@@ -6,7 +6,7 @@ output
   html_document:
         keep_md: yes
 ---
-#### Step-by-step Instruction, Utilizing Ubuntu and github
+#### Step-by-step Instruction, Utilizing Latex, r, Ubuntu and github
 #### For Linux users (for example, Ubuntu 15.04)
 - Install texlive from Ubuntu Software Center by search “texlive”. Otherwise, in the terminal
       - sudo apt-get install texlive
