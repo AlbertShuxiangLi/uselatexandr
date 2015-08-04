@@ -1,0 +1,366 @@
+\documentclass[letterpaper, 0pt]{article}
+\setlength{\footskip}{40pt}
+
+\setlength{\textheight}{8.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\voffset}{1pt}
+\setlength{\hoffset}{1pt}
+\setlength{\oddsidemargin}{1pt}
+\setlength{\topmargin}{1pt}
+\setlength{\marginparwidth}{55pt}
+
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\addbibresource{simpthesis.bib}
+\usepackage{graphicx}
+\usepackage{gensymb}
+
+\pagestyle{fancy}
+\fancyhf{}
+\title{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+\date{\today}
+\author{A Hi-Fi Audio DIYer}
+\SweaveOpts{echo=true}
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\chead{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+
+\linespread{1.6}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\pagenumbering{gobble}
+\maketitle
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+
+\newpage
+\section{TF34-100 Engine Sensor Locations}
+The locations of certain engine sensors are shown in Figure [\ref{fig:sensorlocations}].
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.75\textwidth}
+\begin{center}
+\includegraphics{sensorlocation.jpg}
+\caption{Locations illustrated for three interested sensors (T2C, NG and IGV)}
+\label{fig:sensorlocations}
+\end{center}
+\end{figure}
+
+\section{Type of Engine Compressor Stall Fault}
+See Table [\ref{tab:stalltype}].
+\begin{table}[h!]
+  \begin{center}
+    \caption{Type of compressor stalls}
+    \label{tab:stalltype}
+    \begin{tabular}{l||c|r}
+       & WESA & AoA in Envelope\\
+      \hline
+      PLA & >= 12\degree & >= 12\degree\\
+      \hline
+      PS3(\% drop over 500ms) & >25 \% & >50\%\\
+      \hline
+      NF & 7\% & \\
+      \hline
+      AoA & in envelope for mach number & in envelope for mach number\\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+\section{Data Definition}
+
+Reference \cite{Northrop2010}, Reference \cite{Luca2003} and Reference \cite{Ganguli2004}\\
+Following is the definition for the data used in this Dynamic Report.
+
+\begin{table}[!h] \begin{center}
+<<dataDEF, echo=TRUE, eval=FALSE>>=
+seekData <- function (  workDir = "/home/albert/simplifiedthesis/data", 
+                        Num = 4,   ## number of flights combined
+                        K = 3      ## the Kth data ie. the Kth Aircraft Series Number
+) {
+pattern <- paste("comb_", Num, sep = "")
+filez <- list.files(path = workDir, pattern = pattern, full.names = TRUE)
+faultStatus <- substr(filez[K], 44, 51)
+Dat <- read.csv(filez[K])
+Dat <- Dat[which(Dat[,2] < 9.999 & Dat[,2] > -9.999), ]
+Dat <- ts(Dat[,2])
+return(Dat)
+}
+@
+\caption{Defination code for data used for this report.}
+\label{tab:dataDef}
+\end{center} \end{table}
+
+\hfill\break \hfill\break
+\newpage
+\section{Plots of ts, diff, acf and pacf}
+
+Fllowing 2 figures (Figure \ref{fig:basic-4-3} and Figure \ref{fig:basic-4-23}) demostrate how the R codes would work here.
+
+\begin{figure}[!h] \begin{center}
+<<results=verbatim, echo=FALSE, fig=TRUE>>=
+workDir = "/home/albert/simplifiedthesis/data"
+N <- 7
+K <- 3
+pattern <- paste("comb_", N, sep = "")
+filez <- list.files(path = workDir, pattern = pattern, full.names = TRUE)
+faultStatus <- substr(filez[K], 44, 51)
+lineCol <- ifelse(faultStatus == "Positive", "red", "blue")
+Dat <- read.csv(filez[K])
+Dat <- Dat[which(Dat[,2] < 9.999 & Dat[,2] > -9.999), ]
+Dat <- ts(Dat[,2])
+par(mfrow=c(2,2))
+ts.plot(Dat, ylab = "ts(VG(t))", col = lineCol)
+lines(rep(0,length(Dat)), col = "green")
+ts.plot(diff(Dat), ylab = "diff(ts(VG(t)))", col = lineCol)
+lines(rep(0,length(diff(Dat))), col = "green")
+acf(diff(Dat),lag.max=25, main="")
+pacf(diff(Dat),lag.max=35, main="")
+print(paste("For ",N,"-Combined-Flights data; Aircraft ", K, "th in ASN.", sep=""))
+@
+\caption{The ts(VG(t)), diff(ts), acf(diff(ts) and pacf(diff(ts))).}
+\label{fig:basic-4-3}
+\end{center} \end{figure}
+
+\begin{figure}[!h] \begin{center}
+<<results=verbatim, echo=FALSE, fig=TRUE>>=
+workDir = "/home/albert/simplifiedthesis/data"
+N <- 7
+K <- 18
+pattern <- paste("comb_", N, sep = "")
+filez <- list.files(path = workDir, pattern = pattern, full.names = TRUE)
+faultStatus <- substr(filez[K], 44, 51)
+lineCol <- ifelse(faultStatus == "Positive", "red", "blue")
+Dat <- read.csv(filez[K])
+Dat <- Dat[which(Dat[,2] < 9.999 & Dat[,2] > -9.999), ]
+Dat <- ts(Dat[,2])
+par(mfrow=c(2,2))
+ts.plot(Dat, ylab = "ts(VG(t))", col = lineCol)
+lines(rep(0,length(Dat)), col = "green")
+ts.plot(diff(Dat), ylab = "diff(ts(VG(t)))", col = lineCol)
+lines(rep(0,length(diff(Dat))), col = "green")
+acf(diff(Dat),lag.max=25, main="")
+pacf(diff(Dat),lag.max=35, main="")
+print(paste("For ",N,"-Combined-Flights data; Aircraft ", K, "th in ASN.", sep=""))
+@
+\caption{The ts(VG(t)), diff(ts), acf(diff(ts) and pacf(diff(ts))).}
+\label{fig:basic-4-23}
+\end{center} \end{figure}
+
+\hfill\break \hfill\break
+\newpage
+\section{Mathmatical Equations}
+
+\begin{equation}
+X_t = \delta + AR_1X_{t-1} + AR_2X_{t-2} + \dots + AR_pX_{t-p} + A_t
+        - MA_1A_{t-1} - MA_2A_{t-2} - \dots - MA_qA_{t-q}
+\end{equation}
+Where $X_t=X(t)=diff(ts(VG(t)))$ is the first order differenced value of the ts transformed VG data at the time , $AR_i$is the AutoRegression ($AR$) coefficient, and $MA_j$ is the Moving Average ($MA$) coefficient. This model is denoted as $arima(p,0,q)$.\\
+
+\begin{equation}
+\label{eq:Thesis4}
+p(CompressorStall|N_{CombinedFlights}) = \beta_0 
++ \displaystyle\sum_{i=1}^{p}\beta_i*AR_i
++ \displaystyle\sum_{j=1}^{q}\beta_{j+p}*MA_j + \epsilon)
+\end{equation}
+Where $N$indicates number of flights data used, currently, $N=1,2,...,7$. $AR_i$ is the $AR$ coefficients $(i=1,2, ...,p)$ and $MA_j$ is the $MA$ coefficients $(j=1,2,...,q)$. 
+This Probability Model of Compressor Stall Fault Event is based on the data as described below:\\
+
+\begin{equation} 
+\left( \begin{matrix}
+y_1\\ y_2\\ \vdots \\ y_m\\ y_{m+1}\\ \vdots\\ y_n
+\end{matrix} \right) 
+\sim 
+\left( \begin{matrix}
+AR_{1_1} & AR_{2_1} & \dots & AR_{p_1} & MA_{1_1} & MA_{2_1} & \dots & MA_{q_1}\\
+AR_{1_2} & AR_{2_2} & \dots & AR_{p_2} & MA_{1_2} & MA_{2_2} & \dots & MA_{q_2}\\
+\vdots    & \vdots    & \ddots & \vdots    & \vdots    & \vdots    & \ddots & \vdots\\
+AR_{1_n} & AR_{2_n} & \dots & AR_{p_n} & MA_{1_n} & MA_{2_n} & \dots & MA_{q_n}
+\end{matrix} \right) 
+\end{equation}
+
+Where the response variable (independent variable) $\left( y_1, y_2, ..., y_m \right)$ indicates compressor stall fault event DID NOT happen for engine 1 to engine m, and $\left( y_{m+1}, ..., y_n \right)$ indicates compressor stall fault event DID happen for engine (m+1) to engine n; $AR_{i,k}$ $\left( i = 1, 2, ..., p; k = 1, 2, ..., n \right)$ and $MA_{j,k}$ $\left( j = 1, 2, ..., q; k = 1, 2, ..., n \right)$ are the regressor variables (explanatory variables) which are AutoRegression $(AR)$ coefficients and Moving Average $(MA)$ coefficients of the fitted $arima(p,0,q)$ model from each set of first-order differenced VG data.\\
+Currently m = 22 and n = 28. This reflects that the data consists of 14 aircraft (equipped with a total of 28 engines), and that 6 of the engines have compressor stall fault events.\\
+
+VG time series data is generated by combining flights 1 (one) through 7 (seven). Following equations have been used to explain how the N-Combined-Flight Data constructured. \\
+For example, for 1-Flight Data: 
+\begin{equation}
+VG(t)_{aircraft_i,1Flight} = f(T2C(t)_{aircraft_i,flight_j} + NG(t)_{aircraft_i,flight_j} 
+                                + IGV(t)_{aircraft_i,flight_j})
+\end{equation}
+Where this is aircraft $i$, the $j$ is the highest flight number in our selection of this aircraft.\\
+For 2-Combined-Flights Data:
+\begin{equation}
+VG(t)_{aircraft_i,2CombinedFlights} = VG(t)_{aircraft_i,1Flight_j}
+                                      + VG(t)_{aircraft_i,1Flight_{(j-1)}}
+\end{equation}
+Where this is aircraft $i$, the $(j-1)$ is the second highest flight number in our selection of this aircraft.\\
+For N-Combined-Flight Data: $(N=2,3,...,7)$
+\begin{equation} \begin{split}
+VG(t)_{aircraft_i,NCombinedFlights} =\hspace{1pt}&VG(t)_{aircraft_i,1Flight_j}\\
+                +&VG(t)_{aircraft_i,1Flight_{(j-1)}} + ... + VG(t)_{aircraft_i,1Flight_{(j-N+1)}}
+\end{split} \end{equation}
+Where this is aircraft $i$, the $(j-1)$ is the second highest flight number in our selection of data for this aircraft, the $(j-N+1)$ is the $(N-1)^{th}$ lower that the highest flight number in our selection of data for this aircraft.\\
+The first order differenced VG time series data was constructed as following equations shown.
+\begin{equation} \begin{split}
+diff \{ VG(t)_{aircraft_i,NCombinedFlights} \} = &VG(t)_{aircraft_i,NCombinedFlights}\\
+                                                - &VG(t-1)_{aircraft_i,NCombinedFlights}
+\end{split} \end{equation}
+Thereafter, the constructed first order differenced VG time series data was used to develop an $arima(p,0,q)$ model in R. This process can be mathmatically expressed as
+\begin{equation}
+X(t)=diff \{ VG(t)_{aircraft_i,NCombinedFlights} \}
+\end{equation}
+\begin{equation}
+x.fit <- arima(X(t), order=c(p,0,q), optim.method="Nelder-Mead")
+\end{equation}
+\begin{equation}
+AR_i=x.fit\$coef\left[ i \right] \hspace{2pt}where i=1,2,...,p
+\end{equation}
+\begin{equation}
+MA_j=x.fit\$coef\left[ j+p\right] \hspace{2pt}where j=1,2,...,q
+\end{equation}
+
+\hfill\break \hfill\break 
+\newpage
+\section{Four ARIMA Performance Parameters}
+\subsection{Sigma2}
+A first order difference was formed from the VG data files for the sampled 28 engines, including the 6 engines with compressor stall faults using the flight data immediately prior to the fault flight for that particular aircraft. The aircraft serial number (ASN) and engine ID were checked for consistency to ensure that this was the case. Then 1 to 7 combined-flights-data were formed for the specified ASN aircraft. The reason to form a multiple flight-combined- data is to attempt to achieve an “early alert”.\\
+An R script was developed to check a specified ARIMA(p,0,q) model's performance based on 4 (four) parameters.\\ 
+First, check the \textit\textbf{sigma2} parameter by using the R code: 
+\begin{equation}
+sigma2 = arima(x, order=c(p,0,q), optim.method="Nelder-Mead")\$ sigma2
+\end{equation}
+
+Where "sigma2" stands for the maximum likelihood estimate (MLE) of the innovations variance. The difference between the expected mean at time t, given the time series prior to t, and the actual value is called the innovation. Measuring the variance of the innovation will give you a better idea of how "noisy" the process is.
+\subsection{Log-Likelihood}
+Second, check the \textit\textbf{Log-Likelihood} parameter by using R code:
+\begin{equation}
+Log-Likelihood = arima(x, order=c(p,0,q), optim.method="Nelder-Mead")\$ loglik
+\end{equation}
+
+Where "Log-Likelihood" stands for a logarithm of likelihood function. In statistics, a Likelihoodfunction (often simply the Likelihood) is a function of the parameters of a statistical model. The likelihood of a set of parameter values, $\theta$, given outcomes x, is equal to the probability of those observed outcomes given those parameter values, that is $\mathcal{L}(\theta|x) = \mathcal{P}(x|\theta)$.\\
+
+
+\subsection{AIC}
+Third, check the \textit\textbf{AIC} parameter by using R code: 
+\begin{equation}
+AIC = arima(x, order=c(p,0,q), optim.method="Nelder-Mead")\$ aic
+\end{equation}
+Where "AIC" stands for Akaike Information Criterion, which is a measure of the relative quality of a statistical model for a given set of data.\\
+
+\subsection{Percentage of Significant Coefficients (\textit\textbf{PSC})}
+Fourth, check the Percentage of Significant Coefficients (\textit\textbf{PSC}) parameter. \textit\textbf{PSC} represents the percentage of significant coefficients among the AR coefficients and MA coefficients of the fitted arima(p,0,q) model.  Let $x$ be the first order differenced ts data of VG, $x.fit$ be the fitted arima(p,0,q) model. That is $x.fit <- arima(X(t), order=c(p,0,q), optim.method="Nelder-Mead")$.\\
+If one of the coefficients $x.fit \$ coef \left[ k \right] (k=1,2,...,(p+q))$ of the fitted $arima(p,0,q)$ model meets following condition, it is considered as significant.
+\begin{equation}
+\left| \frac{x.fit \$ coef \left[ k \right]}{x.fit \$ var.coef \left[ k \right] }  \right| > 1.96
+\end{equation}
+
+In R programming environment, $x.fit \$ coef \left[ k \right] $ is the coefficients of the resulting $arima(p,0,q)$ model, where $x.fit \$ coef \left[ k \right] $ be AR coefficients while $k=1,2,...,p$, and $x.fit \$ coef \left[ k \right] $ be MA coefficients while $k=(p+1),(p+2),...,(p+q)$. Correspondingly,$x.fit \$ var.coef \left[ k \right] $ be the estimated variances of coefficient .
+Therefore, the \textit\textbf{PSC} is calculated as:
+\begin{equation}
+PSC=\frac{Sum\hspace{2pt}of\hspace{2pt}the\hspace{2pt}Number\hspace{2pt}of\hspace{2pt}Significant\hspace{2pt} x.fit \$ coef \left[ k \right]}{(p+q)}
+\end{equation}
+
+The following is a demonstration of the parameter’s performance for the various ARIMA models and the different sampling data:\\
+For example, process the sample data as of Figure \ref{fig:data-4-3}, is to fit to an $arima(12,0,4)$ model for the first order differenced values of $ts$ transformed VG data. By using of an R script, the coefficients of $arima(12,0,4)$ is calculated as shown as Table \ref{tab:coef}.
+
+\begin{figure}[!h] \begin{center}
+\setkeys{Gin}{width=0.65\textwidth}
+<<results=hide, each=FALSE, fig=TRUE>>=
+<<dataDEF>>
+Dat <- seekData(, Num=4, K=3)
+par(mfrow=c(1,1))
+plot(diff(Dat), main="diff(ts(VG(t)))")
+@
+\caption{First order differenced values of ts transformed VG data for a 4-Combined-Flights.}
+\label{fig:data-4-3}
+\end{center} \end{figure}
+
+<<fit1,results=hide, echo=FALSE, fig=FALSE, eval=FALSE>>=
+<<dataDEF>>
+N <- 4
+k <- 3
+AR <- 12
+MA <- 4
+Dat <- seekData(, Num = N, K = k)
+x.fit <- arima(diff(Dat), order =c(AR,0,MA), optim.method="Nelder-Mead")
+@
+
+\begin{table}[!h] \begin{center}
+<<results=verbatim, echo=FALSE, fig=FALSE>>=
+<<fit1>>
+print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+            AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
+print(x.fit$coef[1:16], digits = 6)
+@
+\caption{Coefficients of $arima(12,0,4)$ for a 4-Combined-Flights data.}
+\label{tab:coef}
+\end{center} \end{table}
+
+(-0.1815, 0.0002387, 0.01500, 0.03247, 0.02954, -0.002241, 0.05759, 0.04050, 0.006447, 0.01128,
+0.01244, 0.02152, -0.05026, 0.04650, 0.02096, -0.01320)\\
+
+\newpage
+Where the first 12 coefficients are called AR coefficients, and the last 4 coefficients are called MA coefficients, because $p=12$ and $q=4$ in an $arima(p,0,q)$ model here.\\
+
+And the variance of the coefficients of the $arima(12,0,4)$ is calculated as Table \ref{tab:var-coef}\\
+
+\begin{table}[!h] \begin{center}
+<<results=verbatim, echo=FALSE, fig=FALSE>>=
+<<fit1>>
+print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+            AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
+print(x.fit$var.coef[1:16], digits = 6)
+@
+\caption{Variances of coefficient of $arima(12,0,4)$ for a 4-Combined-Flights data.}
+\label{tab:var-coef}
+\end{center} \end{table}
+
+(0.0003720, -0.0002028, -0.00002361, -0.0002780, 0.00001439, 0.00003668, 0.00005502, 0.00005025,
+0.00005391, 0.00006573, 0.00003563, 0.00005364, -0.0003380, 0.0003338, -0.00001389, 0.0003176)\\
+
+\newpage
+Thus, the ratio of coefficient to variance of coefficient $\frac{x.fit \$ coef \left[ k \right]}{x.fit \$ var.coef \left[ k \right] }$ can be calculated as Table \ref{tab:ratio-coef-varcoef}. \\
+
+\begin{table}[!h] \begin{center}
+<<results=verbatim, echo=FALSE, fig=FALSE>>=
+<<fit1>>
+print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+            AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
+Y <- abs((x.fit$coef[1:16])/(x.fit$var.coef[1:16]))
+print(Y[1:16], digits = 6)
+@
+\caption{The absolute ratio of \$coef to \$var.coef of $arima(12,0,4)$ for a 4-Combined-Flights data.}
+\label{tab:ratio-coef-varcoef}
+\end{center} \end{table}
+
+(487.84, 1.18, 635.56, 116.78, 2053.07, 61.09, 1046.79, 805.91, 
+119.60, 171.66, 349.30, 401.21, 148.69, 139.29, 1508.98, 41.57)\\
+
+The second AR coefficient (AR2) is not significant because its ratio of coefficient to variance of coefficient valued as of 1.18. The rest of the coefficients of arima(12,0,4) model are significant. Therefore the \textit\textbf{PSC} can be calculated as
+\begin{equation*}
+PSC = \frac{Sum\hspace{2pt}of\hspace{2pt}the\hspace{2pt}Number\hspace{2pt}of\hspace{2pt}Significant\hspace{2pt} x.fit \$ coef \left[ k \right]}{(p+q)} = \frac{15}{16} = 0.9375 = 93.75\%
+\end{equation*}
+
+Lower than 100\% indicating some coefficients are not significant. It is estimated that compounding factors and non-flight-state-separated data play roles to make some of the arima model coefficients non-significant.\\
+
+(plots here)
+
+The following plots demonstrate the scan study results for various arima(p,0,q) model applied to 1-flight-data, 4-combined-flights-data and 7-combined-flights-data.
+
+(plots here)
+
+\newpage
+\section{Linear Regression Model Adequacy}
+
+\newpage
+\begin{appendix}
+\listoffigures
+\listoftables
+\end{appendix}
+\printbibliography
+\end{document}
