@@ -51,7 +51,6 @@ Following Table \ref{tab:datadefinition} is the definition for the data used in 
 seekdata <- function (workDir = "C://simplifiedthesis/data", Num = 4, K = 3) {
 pattern <- paste("comb_", Num, sep = "")
 filez <- list.files(path = workDir, pattern = pattern, full.names = TRUE)
-faultStatus <- substr(filez[K], 44, 51)
 Dat <- read.csv(filez[K])
 Dat <- Dat[which(Dat[,2] < 9.999 & Dat[,2] > -9.999), ]
 Dat <- ts(Dat[,2])
