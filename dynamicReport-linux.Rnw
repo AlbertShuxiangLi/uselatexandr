@@ -22,12 +22,12 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\title{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+\title{How to Write a Dynamic Report\\ Using r and \LaTeX}
 \date{\today}
-\author{A Hi-Fi Audio DIYer}
+\author{An Enthusiastic of\hspace{2pt}$\iiint\limits_{Birth}^{Life}Learning\hspace{2pt}dy\hspace{2pt}dm\hspace{2pt}dt$}
 \SweaveOpts{echo=true}
 \rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
-\chead{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+\chead{How to Write a Dynamic Report\\ Using r and \LaTeX}
 
 \linespread{1.6}
 \begin{document}
@@ -76,7 +76,7 @@ See Table [\ref{tab:stalltype}].
 Reference \cite{Northrop2010}, Reference \cite{Luca2003} and Reference \cite{Ganguli2004}\\
 Following is the definition for the data used in this Dynamic Report.
 
-\begin{table}[!h] \begin{center}
+\begin{table}[!h]
 <<dataDEF, echo=TRUE, eval=FALSE>>=
 seekData <- function (  workDir = "/home/albert/simplifiedthesis/data", 
                         Num = 4,   ## number of flights combined
@@ -93,7 +93,7 @@ return(Dat)
 @
 \caption{Defination code for data used for this report.}
 \label{tab:dataDef}
-\end{center} \end{table}
+\end{table}
 
 \hfill\break \hfill\break
 \newpage
@@ -151,7 +151,7 @@ print(paste("For ",N,"-Combined-Flights data; Aircraft ", K, "th in ASN.", sep="
 \label{fig:basic-4-23}
 \end{center} \end{figure}
 
-\hfill\break \hfill\break
+\hfill\break \hfill\break \hfill\break \hfill\break
 \newpage
 \section{Mathmatical Equations}
 
@@ -270,9 +270,9 @@ For example, process the sample data as of Figure \ref{fig:data-4-3}, is to fit 
 
 \begin{figure}[!h] \begin{center}
 \setkeys{Gin}{width=0.65\textwidth}
-<<results=hide, each=FALSE, fig=TRUE>>=
+<<results=verbatim, echo=FALSE, fig=TRUE>>=
 <<dataDEF>>
-Dat <- seekData(, Num=4, K=3)
+Dat <- seekData(, Num = 4, K = 3)
 par(mfrow=c(1,1))
 plot(diff(Dat), main="diff(ts(VG(t)))")
 @
@@ -280,20 +280,24 @@ plot(diff(Dat), main="diff(ts(VG(t)))")
 \label{fig:data-4-3}
 \end{center} \end{figure}
 
-<<fit1,results=hide, echo=FALSE, fig=FALSE, eval=FALSE>>=
+<<seekarima, results=hide, echo=FALSE, fig=FALSE, eval=FALSE>>=
 <<dataDEF>>
-N <- 4
-k <- 3
-AR <- 12
-MA <- 4
-Dat <- seekData(, Num = N, K = k)
+seekarima <- function (Num1 = 4, K1 = 3, AR = 12, MA = 4) {
+Dat <- seekData(, Num = Num1, K = K1)
 x.fit <- arima(diff(Dat), order =c(AR,0,MA), optim.method="Nelder-Mead")
+return(x.fit)
+}
 @
 
 \begin{table}[!h] \begin{center}
 <<results=verbatim, echo=FALSE, fig=FALSE>>=
-<<fit1>>
-print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+<<seekarima>>
+Num1 <- 4
+K1 <- 3
+AR <- 12
+MA <- 4
+x.fit <- seekarima(Num1, K1, AR, MA)
+print(paste("For ",Num1,"-Combined-Flights data; Aircraft ", K1, "th in ASN. p=",
             AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
 print(x.fit$coef[1:16], digits = 6)
 @
@@ -311,8 +315,13 @@ And the variance of the coefficients of the $arima(12,0,4)$ is calculated as Tab
 
 \begin{table}[!h] \begin{center}
 <<results=verbatim, echo=FALSE, fig=FALSE>>=
-<<fit1>>
-print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+<<seekarima>>
+Num1 <- 4
+K1 <- 3
+AR <- 12
+MA <- 4
+x.fit <- seekarima(Num1, K1, AR, MA)
+print(paste("For ",Num1,"-Combined-Flights data; Aircraft ", K1, "th in ASN. p=",
             AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
 print(x.fit$var.coef[1:16], digits = 6)
 @
@@ -328,8 +337,13 @@ Thus, the ratio of coefficient to variance of coefficient $\frac{x.fit \$ coef \
 
 \begin{table}[!h] \begin{center}
 <<results=verbatim, echo=FALSE, fig=FALSE>>=
-<<fit1>>
-print(paste("For ",N,"-Combined-Flights data; Aircraft ", k, "th in ASN. p=",
+<<seekarima>>
+Num1 <- 4
+K1 <- 3
+AR <- 12
+MA <- 4
+x.fit <- seekarima(Num1, K1, AR, MA)
+print(paste("For ",Num1,"-Combined-Flights data; Aircraft ", K1, "th in ASN. p=",
             AR, " & q=", MA, " in arima(p,0,q) model.", sep = ""))
 Y <- abs((x.fit$coef[1:16])/(x.fit$var.coef[1:16]))
 print(Y[1:16], digits = 6)
@@ -348,14 +362,82 @@ PSC = \frac{Sum\hspace{2pt}of\hspace{2pt}the\hspace{2pt}Number\hspace{2pt}of\hsp
 
 Lower than 100\% indicating some coefficients are not significant. It is estimated that compounding factors and non-flight-state-separated data play roles to make some of the arima model coefficients non-significant.\\
 
-(plots here)
-
-The following plots demonstrate the scan study results for various arima(p,0,q) model applied to 1-flight-data, 4-combined-flights-data and 7-combined-flights-data.
-
-(plots here)
 
 \newpage
 \section{Linear Regression Model Adequacy}
+
+$fit.lm <- lm(Fault ~ ., data = DATA, na.action = NULL)$ \\
+$R^2 = summary(fit.lm)\$r.squared$ \\
+$R^2_{adj} = summary(fit.lm)\$adj.r.squared$ \\
+$Standard Error = summary(fit.lm)\$sigma$ \\
+$Model_{p-value} = pf(x[1], x[2], x[3], lower.tail = FALSE)$ \\
+
+Where $x<-summary(fit.lm)\$fstatistic$, $pf{stats}$ is the built-in F probability distribution function in R programming. 
+
+The examination of Linear Regression Model (LRM) adequacy based on various arima(p,0,q) are shown in Figure [\ref{fig:lrm1}], Figure [\ref{fig:lrm4}] and Figure [\ref{fig:lrm7}].\\
+
+\hfill\break \newpage
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.95\textwidth}
+\begin{center}
+\includegraphics{lrm1.jpg}
+\caption{Linear Regression Model Adequacy Check 1)}
+\label{fig:lrm1}
+\end{center}
+\end{figure}
+
+\hfill\break \newpage
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.4\textwidth}
+\begin{center}
+\includegraphics{lrm4.jpg}
+\caption{Linear Regression Model Adequacy Check 4)}
+\label{fig:lrm4}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.4\textwidth}
+\begin{center}
+\includegraphics{lrm7.jpg}
+\caption{Linear Regression Model Adequacy Check 7)}
+\label{fig:lrm7}
+\end{center}
+\end{figure}
+
+
+\newpage
+\section{Fit Goodness of ARIMA-LRM }
+The visualization for the goodness of fit for ARIMA-LRM Method is shown in Figure [\ref{fig:fitgoodness-1}], Figure [\ref{fig:fitgoodness-4}] and Figure [\ref{fig:fitgoodness-7}]\\
+
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.95\textwidth}
+\begin{center}
+\includegraphics{fitgoodness-1.jpg}
+\caption{The visualization for the goodness of fit for ARIMA-LRM Method 1)}
+\label{fig:fitgoodness-1}
+\end{center}
+\end{figure}
+
+\hfill\break \newpage
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.4\textwidth}
+\begin{center}
+\includegraphics{fitgoodness-4.jpg}
+\caption{The visualization for the goodness of fit for ARIMA-LRM Method 4)}
+\label{fig:fitgoodness-4}
+\end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\setkeys{Gin}{width=0.4\textwidth}
+\begin{center}
+\includegraphics{fitgoodness-7.jpg}
+\caption{The visualization for the goodness of fit for ARIMA-LRM Method 7)}
+\label{fig:fitgoodness-7}
+\end{center}
+\end{figure}
+
 
 \newpage
 \begin{appendix}
