@@ -22,12 +22,12 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\title{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+\title{How to Use r and \LaTeX\hspace{4pt}to Write a\\ Dynamic Report}
 \date{\today}
 \author{An Enthusiastic of\hspace{2pt}$\iiint\limits_{Birth}^{Life}Learning\hspace{2pt}dy\hspace{2pt}dm\hspace{2pt}dt$}
 \SweaveOpts{echo=true}
 \rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
-\chead{How to Write a \LaTeX \hspace{3pt} Dynamic Report}
+\chead{How to Use r and \LaTeX\hspace{4pt}to Write a Dynamic Report}
 
 \linespread{1.6}
 \begin{document}
