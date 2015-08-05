@@ -1,0 +1,27 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\setkeys{Gin}{width=0.65\textwidth}
+\begin{figure}[!h] \begin{center}
+<<echo=FALSE, fig=TRUE>>=
+workDir = "C://simplifiedthesis/data"
+N <- 4
+K <- 3
+pattern <- paste("comb_", N, sep = "")
+filez <- list.files(path = workDir, pattern = pattern, full.names = TRUE)
+faultStatus <- substr(filez[K], 35, 42)
+lineCol <- ifelse(faultStatus == "Positive", "red", "blue")
+Dat <- read.csv(filez[K])
+Dat <- Dat[which(Dat[,2] < 9.999 & Dat[,2] > -9.999), ]
+Dat <- ts(Dat[,2])
+par(mfrow=c(1,1))
+plot(diff(Dat), main="diff(ts(VG(t)))")
+@
+\caption{First order differenced values of ts transformed VG data for a 4-Combined-Flights.}
+\label{fig:data-4-3}
+\end{center} \end{figure}
+
+
+\end{document}
