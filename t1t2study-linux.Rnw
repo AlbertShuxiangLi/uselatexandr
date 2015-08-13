@@ -1,0 +1,81 @@
+\documentclass[letterpaper, 0pt]{article}
+\setlength{\footskip}{40pt}
+
+\setlength{\textheight}{8.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\voffset}{1pt}
+\setlength{\hoffset}{1pt}
+\setlength{\oddsidemargin}{1pt}
+\setlength{\topmargin}{1pt}
+\setlength{\marginparwidth}{55pt}
+
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\addbibresource{simpthesis.bib}
+\usepackage{graphicx}
+\usepackage{gensymb}
+
+\pagestyle{fancy}
+\fancyhf{}
+\SweaveOpts{echo=true}
+\rfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\chead{Use r and \LaTeX\hspace{3pt}to Write a Dynamic Report}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\linespread{1.6}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\pagenumbering{arabic}
+
+\section{Impact Study of Flight Data Cutout}
+The experimental results is displayed as Table \ref{tab:factors} below.
+\begin{table}[!h]
+<<resultsTAB, results=tex, echo=TRUE>>=
+library(xtable)
+myFile <- list.files(path = "/home/albert/simplifiedthesis/img", 
+                     pattern = ".csv", full.names = TRUE)
+myTable <- read.table(myFile[1], header = TRUE)
+print(xtable(myTable[,1:8]), floating = FALSE)
+@
+\caption{Table of the results}
+\label{tab:factors}
+\end{table}
+
+\newpage
+\section{Visualization of Fit Goodness of ARIMA-LRM}
+Use r programming to execute the experimental design as shown as Table \ref{tab:factors} above.
+
+<<results=tex, echo=TRUE>>=
+filez <- list.files(path = "/home/albert/simplifiedthesis/img", 
+                     pattern = ".png", full.names = TRUE)
+for (i in 1:nrow(myTable)) {
+        sca <- ifelse(i==1, 0.90, 0.90)
+        cat("\\setkeys{Gin}{width=",sca,"\\textwidth}", sep="")
+        AR1 <- substr(filez[i], 45, 46)
+        MA1 <- substr(filez[i], 50, 50)
+        Num1 <- substr(filez[i], 53, 53)
+        t11 <- substr(filez[i], 62, 64)
+        t21 <- substr(filez[i], 70, 72)
+        cap <- paste("$data$=",Num1,"-Combined-Filights; $arima(",AR1,",0,",
+                     MA1,")$; $t_1$=",t11, "; $t_2$=", t21, sep="")
+        cat("\\begin{figure}[!h]")
+        cat("\\begin{center}")
+        cat("\\includegraphics{", filez[i], "}\n\n", sep="")
+        cat("\\caption{", cap, "}", sep="")
+        cat("\\label{fig:fig", i, "}",sep="")
+        cat("\\end{center}")
+        cat("\\end{figure}")
+        cat("\\hfill \\break")
+}
+@
+
+\end{document}
